@@ -112,13 +112,17 @@ public class VideoExport {
 
 	// Called automatically by Processing
 	public void dispose() {
-		try {
-			ffmpeg.flush();
-			ffmpeg.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (ffmpeg != null) {
+			try {
+				ffmpeg.flush();
+				ffmpeg.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		process.destroy();
+		if (process != null) {
+			process.destroy();
+		}
 	}
 
 	// ----------- PRIVATE ------------
