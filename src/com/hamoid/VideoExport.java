@@ -2,6 +2,7 @@ package com.hamoid;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.prefs.Preferences;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
@@ -26,13 +27,17 @@ public class VideoExport {
 
 	private final PGraphics pg;
 	private final PApplet parent;
+
 	private final String ffmpegMetadataComment = "Exported using VideoExport for Processing - https://github.com/hamoid/VideoExport-for-Processing";
 	private int ffmpegCrfQuality;
 	private float ffmpegFrameRate;
-	private boolean ffmpegFound = true;
+	private boolean ffmpegFound = false;
 	private File ffmpegOutputMsg;
 	private OutputStream ffmpeg;
-	private final File videoExportSettings;
+
+	private final Preferences settings;
+	private final static String SETTINGS_FFMPEG_PATH = "settings_ffmpeg_path";
+	private final static String FFMPEG_PATH_UNSET = "ffmpeg_path_unset";
 
 	public VideoExport(PApplet parent, String outputFileName) {
 		this(parent, outputFileName, parent.g);
@@ -44,7 +49,9 @@ public class VideoExport {
 		this.parent = parent;
 		this.pg = pg;
 
-		videoExportSettings = parent.sketchFile("ffmpegPath.txt");
+		settings = Preferences.userRoot().node(this.getClass().getName());
+		System.out.println(this.getClass().getName());
+
 		outputFilePath = parent.sketchPath(outputFileName);
 		ffmpegFrameRate = 30f;
 		ffmpegCrfQuality = 15;
@@ -86,11 +93,11 @@ public class VideoExport {
 	}
 
 	public void saveFrame() {
-		if (!ffmpegFound) {
-			return;
-		}
 		if (!initialized) {
-			init();
+			initialize();
+			initialized = true;
+		}
+		if (!ffmpegFound) {
 			return;
 		}
 		if (loadPixelsEnabled) {
@@ -127,25 +134,25 @@ public class VideoExport {
 
 	// ----------- PRIVATE ------------
 
-	private void checkFfmpegExecutable() {
-		ffmpegFound = false;
-
-		String[] settings = new String[1];
-		if (videoExportSettings.isFile()) {
-			settings = PApplet.loadStrings(videoExportSettings);
-		} else if ((new File("/usr/local/bin/ffmpeg")).isFile()) {
-			settings[0] = "/usr/local/bin/ffmpeg";
-			PApplet.saveStrings(videoExportSettings, settings);
-		} else if ((new File("/usr/bin/ffmpeg")).isFile()) {
-			settings[0] = "/usr/bin/ffmpeg";
-			PApplet.saveStrings(videoExportSettings, settings);
+	private void initialize() {
+		String ffmpeg_path = settings.get(SETTINGS_FFMPEG_PATH,
+				FFMPEG_PATH_UNSET);
+		if (ffmpeg_path.equals(FFMPEG_PATH_UNSET)) {
+			String[] guess_path = { "/usr/local/bin/ffmpeg", "/usr/bin/ffmpeg" };
+			for (String guess : guess_path) {
+				if ((new File(guess)).isFile()) {
+					ffmpeg_path = guess;
+					settings.put(SETTINGS_FFMPEG_PATH, ffmpeg_path);
+					break;
+				}
+			}
 		}
-		if (settings[0] != null) {
-			startFfmpeg(settings[0]);
-		} else {
+		if (ffmpeg_path.equals(FFMPEG_PATH_UNSET)) {
 			parent.selectInput(
 					"Please select the ffmpeg or ffmpeg.exe executable",
 					"onFfmpegSelected", new File("/"), this);
+		} else {
+			startFfmpeg(ffmpeg_path);
 		}
 	}
 
@@ -153,10 +160,9 @@ public class VideoExport {
 		if (selection == null) {
 			System.err.println("Ffmpeg not found.");
 		} else {
-			String[] settings = new String[1];
-			settings[0] = selection.getAbsolutePath();
-			PApplet.saveStrings(videoExportSettings, settings);
-			startFfmpeg(settings[0]);
+			String ffmpeg_path = selection.getAbsolutePath();
+			settings.put(SETTINGS_FFMPEG_PATH, ffmpeg_path);
+			startFfmpeg(ffmpeg_path);
 		}
 	}
 
@@ -184,16 +190,8 @@ public class VideoExport {
 		}
 
 		ffmpeg = process.getOutputStream();
-		initialized = true;
-		ffmpegFound = true;
-	}
 
-	/*
-	 * The start function is not part of the constructor to allow
-	 * changing the settings before the ProcessBuilder is created.
-	 */
-	private void init() {
-		checkFfmpegExecutable();
+		ffmpegFound = true;
 	}
 
 	private void err(String msg) {
