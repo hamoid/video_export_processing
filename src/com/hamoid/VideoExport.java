@@ -116,7 +116,7 @@ public class VideoExport {
 	}
 
 	/**
-	 * Optional. Set the quality of the produced video file
+	 * Set the quality of the produced video file. Optional.
 	 *
 	 * @param crf
 	 *            A value between 0 (high compression) and 100 (high quality,
@@ -136,7 +136,7 @@ public class VideoExport {
 	}
 
 	/**
-	 * Optional. Set the frame rate of the produced video file
+	 * Set the frame rate of the produced video file. Optional.
 	 *
 	 * @param frameRate
 	 *            The frame rate at which the resulting video file should be
@@ -152,10 +152,9 @@ public class VideoExport {
 	}
 
 	/**
-	 * Optional. Tells VideoExport not to call loadPixels(). Use it only if you
-	 * already
-	 * call loadPixels() in your program. Useful to avoid calling it twice,
-	 * which might hurt the performance a bit.
+	 * Tells VideoExport not to call loadPixels(). Use it only if you
+	 * already call loadPixels() in your program. Useful to avoid calling it
+	 * twice, which might hurt the performance a bit. Optional.
 	 */
 	public void dontCallLoadPixels() {
 		loadPixelsEnabled = false;
@@ -209,7 +208,7 @@ public class VideoExport {
 	}
 
 	/**
-	 * return the version of the library.
+	 * Return the version of the library.
 	 *
 	 * @return String
 	 */
@@ -240,7 +239,7 @@ public class VideoExport {
 	}
 
 	/**
-	 * For internal use only. Called by the file selector when the user chooses
+	 * Called internally by the file selector when the user chooses
 	 * the location of ffmpeg on the disk.
 	 *
 	 * @param selection
