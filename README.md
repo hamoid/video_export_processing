@@ -37,4 +37,6 @@ For more details and download links, check the official ffmpeg website: [http://
 When you start a Processing sketch that uses this library you may be asked to indicate the location
 of your ffmpeg executable. This may happen once per sketch.
 
+## Download
 
+http://funprogramming.org/VideoExport-for-Processing/
