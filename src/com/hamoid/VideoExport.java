@@ -191,6 +191,16 @@ public class VideoExport {
 	}
 
 	/**
+	 * Makes the library forget about where the ffmpeg binary was located.
+	 * Useful if you moved ffmpeg to a different location. After calling this
+	 * function the library will ask you again for the location of ffmpeg.
+	 * Optional.
+	 */
+	public void forgetFfmpegPath() {
+		settings.put(SETTINGS_FFMPEG_PATH, FFMPEG_PATH_UNSET);
+	}
+
+	/**
 	 * Called automatically by Processing to clean up before shut down
 	 */
 	public void dispose() {
