@@ -263,8 +263,7 @@ public class VideoExport {
 				"-vcodec", "rawvideo", "-s", pg.width + "x" + pg.height,
 				"-pix_fmt", "rgb24", "-r", "" + ffmpegFrameRate, "-i", "-",
 				"-an", "-vcodec", "h264", "-crf", "" + ffmpegCrfQuality,
-				"-metadata", "comment=\"" + ffmpegMetadataComment + "\"",
-				outputFilePath);
+				"-metadata", "comment=" + ffmpegMetadataComment, outputFilePath);
 
 		processBuilder.redirectErrorStream(true);
 		ffmpegOutputMsg = new File(outputFilePath + ".txt");
