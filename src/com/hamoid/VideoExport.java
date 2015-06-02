@@ -42,28 +42,28 @@ import processing.core.PGraphics;
 
 public class VideoExport {
 
-	private ProcessBuilder processBuilder;
-	private Process process;
-	private boolean initialized = false;
+	protected ProcessBuilder processBuilder;
+	protected Process process;
+	protected boolean initialized = false;
 
-	private final byte[] pixelsByte;
+	protected final byte[] pixelsByte;
 
-	private boolean loadPixelsEnabled = true;
-	private final String outputFilePath;
+	protected boolean loadPixelsEnabled = true;
+	protected final String outputFilePath;
 
-	private final PGraphics pg;
-	private final PApplet parent;
+	protected final PGraphics pg;
+	protected final PApplet parent;
 
-	private final String ffmpegMetadataComment = "Exported using VideoExport for Processing - https://github.com/hamoid/VideoExport-for-Processing";
-	private int ffmpegCrfQuality;
-	private float ffmpegFrameRate;
-	private boolean ffmpegFound = false;
-	private File ffmpegOutputMsg;
-	private OutputStream ffmpeg;
+	protected final String ffmpegMetadataComment = "Exported using VideoExport for Processing - https://github.com/hamoid/VideoExport-for-Processing";
+	protected int ffmpegCrfQuality;
+	protected float ffmpegFrameRate;
+	protected boolean ffmpegFound = false;
+	protected File ffmpegOutputMsg;
+	protected OutputStream ffmpeg;
 
-	private final Preferences settings;
-	private final static String SETTINGS_FFMPEG_PATH = "settings_ffmpeg_path";
-	private final static String FFMPEG_PATH_UNSET = "ffmpeg_path_unset";
+	protected final Preferences settings;
+	protected final static String SETTINGS_FFMPEG_PATH = "settings_ffmpeg_path";
+	protected final static String FFMPEG_PATH_UNSET = "ffmpeg_path_unset";
 
 	public final static String VERSION = "##library.prettyVersion##";
 
@@ -226,7 +226,7 @@ public class VideoExport {
 		return VERSION;
 	}
 
-	private void initialize() {
+	protected void initialize() {
 		String ffmpeg_path = settings.get(SETTINGS_FFMPEG_PATH,
 				FFMPEG_PATH_UNSET);
 		if (ffmpeg_path.equals(FFMPEG_PATH_UNSET)) {
@@ -272,8 +272,9 @@ public class VideoExport {
 		processBuilder = new ProcessBuilder(executable, "-y", "-f", "rawvideo",
 				"-vcodec", "rawvideo", "-s", pg.width + "x" + pg.height,
 				"-pix_fmt", "rgb24", "-r", "" + ffmpegFrameRate, "-i", "-",
-				"-an", "-vcodec", "h264", "-crf", "" + ffmpegCrfQuality,
-				"-metadata", "comment=" + ffmpegMetadataComment, outputFilePath);
+				"-an", "-vcodec", "h264", "-pix_fmt", "yuv420p", "-crf", ""
+						+ ffmpegCrfQuality, "-metadata", "comment="
+						+ ffmpegMetadataComment, outputFilePath);
 
 		processBuilder.redirectErrorStream(true);
 		ffmpegOutputMsg = new File(outputFilePath + ".txt");
@@ -291,12 +292,12 @@ public class VideoExport {
 		ffmpegFound = true;
 	}
 
-	private void err(String msg) {
+	protected void err(String msg) {
 		System.err.println("VideoExport error: " + msg);
 		System.exit(1);
 	}
 
-	private void err() {
+	protected void err() {
 		err("Ffmpeg failed. Study " + ffmpegOutputMsg + " for more details.");
 	}
 
