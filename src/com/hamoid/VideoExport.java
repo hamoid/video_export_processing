@@ -110,6 +110,9 @@ public class VideoExport {
 		if (pg == null) {
 			pixelsByte = null;
 			err("Did you initialize your PGraphics?");
+		} else if (pg.width == 0) {
+			pixelsByte = null;
+			err("The display width is 0. Please call size() before instantiating VideoExport.");
 		} else {
 			pixelsByte = new byte[pg.width * pg.height * 3];
 		}
