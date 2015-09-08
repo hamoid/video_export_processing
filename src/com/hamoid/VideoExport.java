@@ -51,7 +51,7 @@ public class VideoExport {
 	protected boolean loadPixelsEnabled = true;
 	protected final String outputFilePath;
 
-	protected final PGraphics pg;
+	protected PGraphics pg;
 	protected final PApplet parent;
 
 	protected final String ffmpegMetadataComment = "Exported using VideoExport for Processing - https://github.com/hamoid/VideoExport-for-Processing";
@@ -116,6 +116,18 @@ public class VideoExport {
 		} else {
 			pixelsByte = new byte[pg.width * pg.height * 3];
 		}
+	}
+
+	/**
+	 * Set the PGraphics element. Advanced use only. Optional.
+	 *
+	 * @param pg
+	 *            A PGraphics object. Probably only called when working with an
+	 *            array of PGraphics objects.
+	 *
+	 */
+	public void setGraphics(PGraphics pg) {
+		this.pg = pg;
 	}
 
 	/**
@@ -267,6 +279,10 @@ public class VideoExport {
 		}
 	}
 
+	// ffmpeg -i input -c:v libx264 -crf 20 -maxrate 400k -bufsize 1835k
+	// output.mp4
+	// -profile:v baseline -level 3.0
+	// https://trac.ffmpeg.org/wiki/Encode/H.264#Compatibility
 	private void startFfmpeg(String executable) {
 		// -y = overwrite, otherwise it fails the second time you run
 		// -an = no audio
