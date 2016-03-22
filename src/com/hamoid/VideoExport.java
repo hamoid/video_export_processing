@@ -101,7 +101,7 @@ public class VideoExport {
 		this.parent = parent;
 		this.pg = pg;
 
-		settings = Preferences.userRoot().node(this.getClass().getName());
+		settings = Preferences.userNodeForPackage(this.getClass());
 
 		outputFilePath = parent.sketchPath(outputFileName);
 		ffmpegFrameRate = 30f;
