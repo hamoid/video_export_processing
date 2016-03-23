@@ -245,7 +245,8 @@ public class VideoExport {
 		String ffmpeg_path = settings.get(SETTINGS_FFMPEG_PATH,
 				FFMPEG_PATH_UNSET);
 		if (ffmpeg_path.equals(FFMPEG_PATH_UNSET)) {
-			String[] guess_path = { "/usr/local/bin/ffmpeg", "/usr/bin/ffmpeg" };
+			String[] guess_path = { "/usr/local/bin/ffmpeg",
+					"/usr/bin/ffmpeg" };
 			for (String guess : guess_path) {
 				if ((new File(guess)).isFile()) {
 					ffmpeg_path = guess;
@@ -255,8 +256,10 @@ public class VideoExport {
 			}
 		}
 		if (ffmpeg_path.equals(FFMPEG_PATH_UNSET)) {
+			System.out.println(
+					"The ffmpeg program is required. Asking the user where it was downloaded...");
 			parent.selectInput(
-					"Please select the ffmpeg or ffmpeg.exe executable",
+					"Please select the previously downloaded ffmpeg or ffmpeg.exe executable",
 					"onFfmpegSelected", new File("/"), this);
 		} else {
 			startFfmpeg(ffmpeg_path);
@@ -271,7 +274,9 @@ public class VideoExport {
 	 */
 	public void onFfmpegSelected(File selection) {
 		if (selection == null) {
-			System.err.println("Ffmpeg not found.");
+			System.err.println(
+					"The VideoExport library requires ffmpeg but it was not found. "
+							+ "Please try again or read the documentation.");
 		} else {
 			String ffmpeg_path = selection.getAbsolutePath();
 			settings.put(SETTINGS_FFMPEG_PATH, ffmpeg_path);
@@ -291,9 +296,9 @@ public class VideoExport {
 		processBuilder = new ProcessBuilder(executable, "-y", "-f", "rawvideo",
 				"-vcodec", "rawvideo", "-s", pg.width + "x" + pg.height,
 				"-pix_fmt", "rgb24", "-r", "" + ffmpegFrameRate, "-i", "-",
-				"-an", "-vcodec", "h264", "-pix_fmt", "yuv420p", "-crf", ""
-						+ ffmpegCrfQuality, "-metadata", "comment="
-						+ ffmpegMetadataComment, outputFilePath);
+				"-an", "-vcodec", "h264", "-pix_fmt", "yuv420p", "-crf",
+				"" + ffmpegCrfQuality, "-metadata",
+				"comment=" + ffmpegMetadataComment, outputFilePath);
 
 		processBuilder.redirectErrorStream(true);
 		ffmpegOutputMsg = new File(outputFilePath + ".txt");
