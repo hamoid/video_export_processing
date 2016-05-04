@@ -49,6 +49,7 @@ public class VideoExport {
 	protected final byte[] pixelsByte;
 
 	protected boolean loadPixelsEnabled = true;
+	protected boolean saveDebugInfo = true;
 	protected final String outputFilePath;
 
 	protected PGraphics pg;
@@ -173,6 +174,17 @@ public class VideoExport {
 	 */
 	public void dontCallLoadPixels() {
 		loadPixelsEnabled = false;
+	}
+
+	/**
+	 * Call this method if you don't want a debug text file saved together
+	 * with the video file. The text file normally contains the output messages
+	 * from ffmpeg, which may be useful for diagnosing problems. If video is
+	 * being exported correctly you may want to call this method to avoid
+	 * creating unnecessary files. Optional.
+	 */
+	public void dontSaveDebugInfo() {
+		saveDebugInfo = false;
 	}
 
 	/**
@@ -301,8 +313,10 @@ public class VideoExport {
 				"comment=" + ffmpegMetadataComment, outputFilePath);
 
 		processBuilder.redirectErrorStream(true);
-		ffmpegOutputMsg = new File(outputFilePath + ".txt");
-		processBuilder.redirectOutput(ffmpegOutputMsg);
+		if (saveDebugInfo) {
+			ffmpegOutputMsg = new File(outputFilePath + ".txt");
+			processBuilder.redirectOutput(ffmpegOutputMsg);
+		}
 		processBuilder.redirectInput(ProcessBuilder.Redirect.PIPE);
 		try {
 			process = processBuilder.start();

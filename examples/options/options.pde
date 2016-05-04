@@ -23,7 +23,11 @@ void setup() {
   // If your sketch already calls loadPixels(), you can tell videoExport to 
   // not do that again. It's not necessary, but your sketch may perform a 
   // bit better if you avoid calling it twice.
-  videoExport.dontCallLoadPixels();  
+  videoExport.dontCallLoadPixels();
+  
+  // If video is being exported correctly, you can call this function to avoid
+  // creating .txt files containing debug information.
+  videoExport.dontSaveDebugInfo();
 }
 void draw() {
   loadPixels();
