@@ -37,6 +37,18 @@ For more details and download links, check the official ffmpeg website: [http://
 When you start a Processing sketch that uses this library you may be asked to indicate the location
 of your ffmpeg executable. This may happen once per sketch.
 
+## faq
+
+### I changed the location of ffmpeg and the library stopped working. What can I do?
+
+Add ``` videoExport.forgetFfmpegPath()``` to your setup(), run your program once, then remove that line. This will trigger the library asking for the location of ffmpeg again, so you can point to the new location of ffmpeg.
+
+### Sometimes the resulting mp4 video files are not working. Why?
+
+mp4 files contain essential metadata at the end of the file. The video export library saves this metadata when shutting down your sketch, inside the dispose() method. In theory, Processing calls dispose() automatically when stopping the sketch. Unfortunately dispose() is not always called. 
+
+There's at least 3 ways to stop your program: pressing ESC, pressing STOP on the IDE, and closing the sketch window. Try those three ways to find out what works for you (until [this bug](https://github.com/processing/processing/issues/4445) is resolved in Processing). You can also try calling ```videoExport.dispose()``` manually (for instance when pressing a key to stop exporting video frames).
+
 ## Download
 
 http://funprogramming.org/VideoExport-for-Processing/
