@@ -96,8 +96,20 @@ public class VideoExport {
 	 * @param pg
 	 *            PGraphics object to export as video
 	 */
-	public VideoExport(PApplet parent, String outputFileName, PGraphics pg) {
+	public VideoExport(PApplet parent, final String outputFileName,
+			PGraphics pg) {
+
 		parent.registerMethod("dispose", this);
+
+		// // Disabling this, since it doesn't seem to help dispose()
+		// // being called by Processing on shut down.
+
+		// // dispose() workaround suggested at
+		// // https://github.com/processing/processing/issues/4381
+
+		// Runtime.getRuntime().addShutdownHook(new Thread() {
+		// @Override public void run() { dispose(); }
+		// });
 
 		this.parent = parent;
 		this.pg = pg;
@@ -238,10 +250,19 @@ public class VideoExport {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			ffmpeg = null;
 		}
 		if (process != null) {
 			process.destroy();
+			try {
+				process.waitFor();
+			} catch (InterruptedException e) {
+				PApplet.println("Waiting for ffmpeg timed out!");
+				e.printStackTrace();
+			}
+			process = null;
 		}
+		PApplet.println(outputFilePath, "saved.");
 	}
 
 	/**
