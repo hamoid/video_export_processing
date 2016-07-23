@@ -32,7 +32,7 @@ import java.io.OutputStream;
 import java.util.prefs.Preferences;
 
 import processing.core.PApplet;
-import processing.core.PGraphics;
+import processing.core.PImage;
 
 /**
  *
@@ -52,8 +52,8 @@ public class VideoExport {
 	protected boolean saveDebugInfo = true;
 	protected final String outputFilePath;
 
-	protected PGraphics pg;
-	protected final PApplet parent;
+	protected PImage img;
+	protected PApplet parent;
 
 	protected final String ffmpegMetadataComment = "Exported using VideoExport for Processing - https://github.com/hamoid/VideoExport-for-Processing";
 	protected int ffmpegCrfQuality;
@@ -62,7 +62,7 @@ public class VideoExport {
 	protected File ffmpegOutputMsg;
 	protected OutputStream ffmpeg;
 
-	protected final Preferences settings;
+	protected Preferences settings;
 	protected final static String SETTINGS_FFMPEG_PATH = "settings_ffmpeg_path";
 	protected final static String FFMPEG_PATH_UNSET = "ffmpeg_path_unset";
 
@@ -85,7 +85,7 @@ public class VideoExport {
 
 	/**
 	 *
-	 * Constructor that allows to set a PGraphics to export as video (advanced)
+	 * Constructor that allows to set a PImage to export as video (advanced)
 	 *
 	 * @example usingPGraphics
 	 * @param parent
@@ -93,11 +93,12 @@ public class VideoExport {
 	 * @param outputFileName
 	 *            The name of the video file to produce, for instance
 	 *            "beauty.mp4"
-	 * @param pg
-	 *            PGraphics object to export as video
+	 * @param img
+	 *            PImage object to export as video (can be a PGraphics, Movie,
+	 *            Capture...)
 	 */
 	public VideoExport(PApplet parent, final String outputFileName,
-			PGraphics pg) {
+			PImage img) {
 
 		parent.registerMethod("dispose", this);
 
@@ -112,7 +113,7 @@ public class VideoExport {
 		// });
 
 		this.parent = parent;
-		this.pg = pg;
+		this.img = img;
 
 		settings = Preferences.userNodeForPackage(this.getClass());
 
@@ -120,27 +121,26 @@ public class VideoExport {
 		ffmpegFrameRate = 30f;
 		ffmpegCrfQuality = 15;
 
-		if (pg == null) {
+		if (img == null) {
 			pixelsByte = null;
-			err("Did you initialize your PGraphics?");
-		} else if (pg.width == 0) {
+			err("Did you initialize your PImage?");
+		} else if (img.width == 0) {
 			pixelsByte = null;
 			err("The display width is 0. Please call size() before instantiating VideoExport.");
 		} else {
-			pixelsByte = new byte[pg.width * pg.height * 3];
+			pixelsByte = new byte[img.width * img.height * 3];
 		}
 	}
 
 	/**
-	 * Set the PGraphics element. Advanced use only. Optional.
+	 * Set the PImage element. Advanced use only. Optional.
 	 *
-	 * @param pg
-	 *            A PGraphics object. Probably only called when working with an
-	 *            array of PGraphics objects.
+	 * @param img
+	 *            A PImage object. Probably used for off-screen exporting..
 	 *
 	 */
-	public void setGraphics(PGraphics pg) {
-		this.pg = pg;
+	public void setGraphics(PImage img) {
+		this.img = img;
 	}
 
 	/**
@@ -201,7 +201,7 @@ public class VideoExport {
 
 	/**
 	 * Adds one frame to the video file. The frame will be the content of the
-	 * display, or the content of a PGraphics if you specified one in the
+	 * display, or the content of a PImage if you specified one in the
 	 * constructor.
 	 */
 	public void saveFrame() {
@@ -213,10 +213,10 @@ public class VideoExport {
 			return;
 		}
 		if (loadPixelsEnabled) {
-			pg.loadPixels();
+			img.loadPixels();
 		}
 		int byteNum = 0;
-		for (final int px : pg.pixels) {
+		for (final int px : img.pixels) {
 			pixelsByte[byteNum++] = (byte) (px >> 16);
 			pixelsByte[byteNum++] = (byte) (px >> 8);
 			pixelsByte[byteNum++] = (byte) (px);
@@ -250,7 +250,6 @@ public class VideoExport {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			ffmpeg = null;
 		}
 		if (process != null) {
 			process.destroy();
@@ -260,8 +259,15 @@ public class VideoExport {
 				PApplet.println("Waiting for ffmpeg timed out!");
 				e.printStackTrace();
 			}
-			process = null;
 		}
+		processBuilder = null;
+		process = null;
+		img = null;
+		parent = null;
+		ffmpeg = null;
+		ffmpegOutputMsg = null;
+		settings = null;
+
 		PApplet.println(outputFilePath, "saved.");
 	}
 
@@ -327,7 +333,7 @@ public class VideoExport {
 		// "-b:v", "3000k" = video bit rate
 		// "-i", "-" = pipe:0
 		processBuilder = new ProcessBuilder(executable, "-y", "-f", "rawvideo",
-				"-vcodec", "rawvideo", "-s", pg.width + "x" + pg.height,
+				"-vcodec", "rawvideo", "-s", img.width + "x" + img.height,
 				"-pix_fmt", "rgb24", "-r", "" + ffmpegFrameRate, "-i", "-",
 				"-an", "-vcodec", "h264", "-pix_fmt", "yuv420p", "-crf",
 				"" + ffmpegCrfQuality, "-metadata",
