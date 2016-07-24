@@ -46,7 +46,7 @@ public class VideoExport {
 	protected Process process;
 	protected boolean initialized = false;
 
-	protected final byte[] pixelsByte;
+	protected byte[] pixelsByte = null;
 
 	protected boolean loadPixelsEnabled = true;
 	protected boolean saveDebugInfo = true;
@@ -120,16 +120,6 @@ public class VideoExport {
 		outputFilePath = parent.sketchPath(outputFileName);
 		ffmpegFrameRate = 30f;
 		ffmpegCrfQuality = 15;
-
-		if (img == null) {
-			pixelsByte = null;
-			err("Did you initialize your PImage?");
-		} else if (img.width == 0) {
-			pixelsByte = null;
-			err("The display width is 0. Please call size() before instantiating VideoExport.");
-		} else {
-			pixelsByte = new byte[img.width * img.height * 3];
-		}
 	}
 
 	/**
@@ -205,27 +195,34 @@ public class VideoExport {
 	 * constructor.
 	 */
 	public void saveFrame() {
-		if (!initialized) {
-			initialize();
-			initialized = true;
-		}
-		if (!ffmpegFound) {
-			return;
-		}
-		if (loadPixelsEnabled) {
-			img.loadPixels();
-		}
-		int byteNum = 0;
-		for (final int px : img.pixels) {
-			pixelsByte[byteNum++] = (byte) (px >> 16);
-			pixelsByte[byteNum++] = (byte) (px >> 8);
-			pixelsByte[byteNum++] = (byte) (px);
-		}
-		try {
-			ffmpeg.write(pixelsByte);
-		} catch (Exception e) {
-			e.printStackTrace();
-			err();
+		if (img != null && img.width > 0) {
+			if (!initialized) {
+				initialize();
+				initialized = true;
+			}
+			if (!ffmpegFound) {
+				return;
+			}
+			if (pixelsByte == null) {
+				pixelsByte = new byte[img.width * img.height * 3];
+			}
+			if (loadPixelsEnabled) {
+				img.loadPixels();
+			}
+
+			int byteNum = 0;
+			for (final int px : img.pixels) {
+				pixelsByte[byteNum++] = (byte) (px >> 16);
+				pixelsByte[byteNum++] = (byte) (px >> 8);
+				pixelsByte[byteNum++] = (byte) (px);
+			}
+
+			try {
+				ffmpeg.write(pixelsByte);
+			} catch (Exception e) {
+				e.printStackTrace();
+				err();
+			}
 		}
 	}
 
@@ -280,9 +277,12 @@ public class VideoExport {
 		return VERSION;
 	}
 
+	public String getFfmpegPath() {
+		return settings.get(SETTINGS_FFMPEG_PATH, FFMPEG_PATH_UNSET);
+	}
+
 	protected void initialize() {
-		String ffmpeg_path = settings.get(SETTINGS_FFMPEG_PATH,
-				FFMPEG_PATH_UNSET);
+		String ffmpeg_path = getFfmpegPath();
 		if (ffmpeg_path.equals(FFMPEG_PATH_UNSET)) {
 			String[] guess_path = { "/usr/local/bin/ffmpeg",
 					"/usr/bin/ffmpeg" };
