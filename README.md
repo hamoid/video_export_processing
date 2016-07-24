@@ -49,6 +49,17 @@ mp4 files contain essential metadata at the end of the file. The video export li
 
 There's at least 3 ways to stop your program: pressing ESC, pressing STOP on the IDE, and closing the sketch window. Try those three ways to find out what works for you (until [this bug](https://github.com/processing/processing/issues/4445) is resolved in Processing). You can also try calling ```videoExport.dispose()``` manually (for instance when pressing a key to stop exporting video frames).
 
+## change log
+
+* v0.1.3 - 24.07.2016
+  * Add webcam saving example.
+  * Add getFfmpegPath() public method (requested by [@ffd8](https://github.com/ffd8)).
+  * Replace PGraphics with PImage, enables webcam/movie saving (requested by [@transfluxus](https://github.com/transfluxus)).
+* v0.1.1 - 15.06.2016
+  * Use .waitFor() to reduce chances of video corruption.
+* ...
+* v0.0.1 - 25.01.2015
+
 ## Download
 
 http://funprogramming.org/VideoExport-for-Processing/
