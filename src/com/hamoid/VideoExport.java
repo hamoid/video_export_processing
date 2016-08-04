@@ -249,8 +249,10 @@ public class VideoExport {
 			}
 		}
 		if (process != null) {
-			process.destroy();
 			try {
+				Thread.sleep(1000);
+
+				process.destroy();
 				process.waitFor();
 			} catch (InterruptedException e) {
 				PApplet.println("Waiting for ffmpeg timed out!");
