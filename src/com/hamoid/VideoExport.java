@@ -329,7 +329,7 @@ public class VideoExport {
 	// output.mp4
 	// -profile:v baseline -level 3.0
 	// https://trac.ffmpeg.org/wiki/Encode/H.264#Compatibility
-	private void startFfmpeg(String executable) {
+	protected void startFfmpeg(String executable) {
 		// -y = overwrite, otherwise it fails the second time you run
 		// -an = no audio
 		// "-b:v", "3000k" = video bit rate
