@@ -227,60 +227,12 @@ public class VideoExport {
 	}
 
 	/**
-	 * Makes the library forget about where the ffmpeg binary was located.
-	 * Useful if you moved ffmpeg to a different location. After calling this
-	 * function the library will ask you again for the location of ffmpeg.
-	 * Optional.
-	 */
-	public void forgetFfmpegPath() {
-		settings.put(SETTINGS_FFMPEG_PATH, FFMPEG_PATH_UNSET);
-	}
-
-	/**
-	 * Called automatically by Processing to clean up before shut down
-	 */
-	public void dispose() {
-		if (ffmpeg != null) {
-			try {
-				ffmpeg.flush();
-				ffmpeg.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		if (process != null) {
-			try {
-				Thread.sleep(1000);
-
-				process.destroy();
-				process.waitFor();
-			} catch (InterruptedException e) {
-				PApplet.println("Waiting for ffmpeg timed out!");
-				e.printStackTrace();
-			}
-		}
-		processBuilder = null;
-		process = null;
-		img = null;
-		parent = null;
-		ffmpeg = null;
-		ffmpegOutputMsg = null;
-		settings = null;
-
-		PApplet.println(outputFilePath, "saved.");
-	}
-
-	/**
 	 * Return the version of the library.
 	 *
 	 * @return String
 	 */
 	public static String version() {
 		return VERSION;
-	}
-
-	public String getFfmpegPath() {
-		return settings.get(SETTINGS_FFMPEG_PATH, FFMPEG_PATH_UNSET);
 	}
 
 	protected void initialize() {
@@ -305,6 +257,20 @@ public class VideoExport {
 		} else {
 			startFfmpeg(ffmpeg_path);
 		}
+	}
+
+	public String getFfmpegPath() {
+		return settings.get(SETTINGS_FFMPEG_PATH, FFMPEG_PATH_UNSET);
+	}
+
+	/**
+	 * Makes the library forget about where the ffmpeg binary was located.
+	 * Useful if you moved ffmpeg to a different location. After calling this
+	 * function the library will ask you again for the location of ffmpeg.
+	 * Optional.
+	 */
+	public void forgetFfmpegPath() {
+		settings.put(SETTINGS_FFMPEG_PATH, FFMPEG_PATH_UNSET);
 	}
 
 	/**
@@ -357,6 +323,45 @@ public class VideoExport {
 		ffmpeg = process.getOutputStream();
 
 		ffmpegFound = true;
+	}
+
+	protected void endFfmpeg() {
+		processBuilder = null;
+		process = null;
+		ffmpeg = null;
+		ffmpegOutputMsg = null;
+	}
+
+	protected void endMovie() {
+		if (ffmpeg != null) {
+			try {
+				ffmpeg.flush();
+				ffmpeg.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		if (process != null) {
+			try {
+				Thread.sleep(1000);
+
+				process.destroy();
+				process.waitFor();
+			} catch (InterruptedException e) {
+				PApplet.println("Waiting for ffmpeg timed out!");
+				e.printStackTrace();
+			}
+		}
+		endFfmpeg();
+
+		PApplet.println(outputFilePath, "saved.");
+	}
+
+	/**
+	 * Called automatically by Processing to clean up before shut down
+	 */
+	public void dispose() {
+		endMovie();
 	}
 
 	protected void err(String msg) {
