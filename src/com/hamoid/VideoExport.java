@@ -50,7 +50,7 @@ public class VideoExport {
 
 	protected boolean loadPixelsEnabled = true;
 	protected boolean saveDebugInfo = true;
-	protected final String outputFilePath;
+	protected String outputFilePath;
 
 	protected PImage img;
 	protected PApplet parent;
@@ -71,6 +71,17 @@ public class VideoExport {
 	/**
 	 * Constructor, usually called in the setup() method in your sketch to
 	 * initialize and start the library.
+	 *
+	 * Using a default movie file name (processing-movie.mp4).
+	 *
+	 * @param parent
+	 */
+	public VideoExport(PApplet parent) {
+		this(parent, "processing-movie.mp4", parent.g);
+	}
+
+	/**
+	 * Constructor that allows specifying a movie file name.
 	 *
 	 * @example basic
 	 * @param parent
@@ -120,6 +131,16 @@ public class VideoExport {
 		outputFilePath = parent.sketchPath(outputFileName);
 		ffmpegFrameRate = 30f;
 		ffmpegCrfQuality = 15;
+	}
+
+	/**
+	 * Allow setting a new movie name, in case we want to export several movies,
+	 * one after the other.
+	 *
+	 * @param newMovieFileName
+	 */
+	public void setMovieFileName(final String newMovieFileName) {
+		outputFilePath = parent.sketchPath(newMovieFileName);
 	}
 
 	/**
@@ -292,8 +313,7 @@ public class VideoExport {
 	}
 
 	// ffmpeg -i input -c:v libx264 -crf 20 -maxrate 400k -bufsize 1835k
-	// output.mp4
-	// -profile:v baseline -level 3.0
+	// output.mp4 -profile:v baseline -level 3.0
 	// https://trac.ffmpeg.org/wiki/Encode/H.264#Compatibility
 	protected void startFfmpeg(String executable) {
 		// -y = overwrite, otherwise it fails the second time you run
@@ -330,9 +350,17 @@ public class VideoExport {
 		process = null;
 		ffmpeg = null;
 		ffmpegOutputMsg = null;
+		initialized = false;
 	}
 
-	protected void endMovie() {
+	/**
+	 * Called to end exporting a movie before exiting our program, or before
+	 * exporting a new movie.
+	 */
+	public void endMovie() {
+		if (!initialized) {
+			return;
+		}
 		if (ffmpeg != null) {
 			try {
 				ffmpeg.flush();
@@ -343,7 +371,9 @@ public class VideoExport {
 		}
 		if (process != null) {
 			try {
-				Thread.sleep(1000);
+				// This delay is to avoid creating corrupted video files.
+				// I'm not sure it is useful.
+				Thread.sleep(500);
 
 				process.destroy();
 				process.waitFor();
