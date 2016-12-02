@@ -8,10 +8,13 @@ void setup() {
   
   videoExport = new VideoExport(this, "options.mp4");
   
-  // Set quality to 100 (best) for lossless video (high quality, big size)
-  // Set it to 0 (worst) if you enjoy poor quality videos :)
-  // 70 might be a good balance.
-  videoExport.setQuality(70);
+  // Set video and audio quality.
+  // Video quality: 100 is best, lossless video (but big file size)
+  //   Set it to 0 (worst) if you enjoy poor quality videos :)
+  //   70 is the default.
+  // Audio quality: 128 is the default, 192 very good,
+  //   256 is near lossless but big file size.
+  videoExport.setQuality(70, 128);
   
   // This sets the frame rate of the resulting video file. I has nothing to do
   // with the current Processing frame rate. For instance you could have a 

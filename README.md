@@ -45,20 +45,35 @@ Add ``` videoExport.forgetFfmpegPath()``` to your setup(), run your program once
 
 ### Sometimes the resulting mp4 video files are not working. Why?
 
-mp4 files contain essential metadata at the end of the file. The video export library saves this metadata when shutting down your sketch, inside the dispose() method. In theory, Processing calls dispose() automatically when stopping the sketch. Unfortunately dispose() is not always called. 
+mp4 files contain essential metadata at the end of the file.
+The video export library saves this metadata when you call the
+```endMovie()``` method. If you don't call it, the movie may be
+incomplete. The endMovie() method was added on version 0.1.5.
 
-There's at least 3 ways to stop your program: pressing ESC, pressing STOP on the IDE, and closing the sketch window. Try those three ways to find out what works for you (until [this bug](https://github.com/processing/processing/issues/4445) is resolved in Processing). You can also try calling ```videoExport.dispose()``` manually (for instance when pressing a key to stop exporting video frames).
+### I see an ffmpeg error related to "crf". Why?
+
+This happens if your copy of ffmpeg does not include the h264 encoder.
+Not all ffmpeg binaries are equal, some include more features than others.
+Try downloading a different or more recent binary. Let me know if that
+doesn't work.
 
 ## change log
 
-* v0.1.3 - 24.07.2016
+* 0.1.5 - December 2nd, 2016
+  * Refactoring. Clean up code.
+  * Add .startMovie() and .endMovie() to prevent possible "missing-end-of-movie corruption".
+  * Allow attaching a sound file to the produced movie.
+  * Allow exporting multiple video files using the same videoExport object.
+* 0.1.4 - August 4th, 2016
+  * Attempt to fix randomly corrupted videos on Windows 
+* 0.1.3 - July 24th, 2016
   * Add webcam saving example.
   * Add getFfmpegPath() public method (requested by [@ffd8](https://github.com/ffd8)).
   * Replace PGraphics with PImage, enables webcam/movie saving (requested by [@transfluxus](https://github.com/transfluxus)).
-* v0.1.1 - 15.06.2016
+* 0.1.1 - June 15th, 2016
   * Use .waitFor() to reduce chances of video corruption.
 * ...
-* v0.0.1 - 25.01.2015
+* 0.0.1 - January 25th, 2015
 
 ## Download
 
