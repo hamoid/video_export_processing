@@ -28,6 +28,14 @@ void setup() {
   // If video is being exported correctly, you can call this function to avoid
   // creating .txt files containing debug information.
   videoExport.dontSaveDebugInfo();
+
+  // Use the next line once if you have change the
+  // location of the ffmpeg tool. This will make
+  // the library ask for it's location again.
+  //videoExport.forgetFfmpegPath();
+
+  // Start exporting after adjusting the settings.
+  videoExport.startMovie();
 }
 void draw() {
   loadPixels();
@@ -36,4 +44,10 @@ void draw() {
   }
   videoExport.saveFrame();
   updatePixels();
+}
+void keyPressed() {
+  if (key == 'q') {
+    videoExport.endMovie();
+    exit();
+  }
 }

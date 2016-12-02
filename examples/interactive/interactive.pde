@@ -25,6 +25,7 @@ void setup() {
   println("Press R to toggle recording");
   
   videoExport = new VideoExport(this, "interactive.mp4");
+  videoExport.startMovie();
 }
 void draw() {
   background(0);
@@ -43,5 +44,9 @@ void keyPressed() {
   if(key == 'r' || key == 'R') {
     recording = !recording;
     println("Recording is " + (recording ? "ON" : "OFF"));
+  }
+  if (key == 'q') {
+    videoExport.endMovie();
+    exit();
   }
 }

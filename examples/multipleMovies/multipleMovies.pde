@@ -2,22 +2,21 @@ import com.hamoid.*;
 
 /*
   This sketch shows how you can output multiple movies.
- 
- To create a movie, hold down the mouse button for a few seconds.
- 
- Do this multiple times to export multiple movies.
- */
+  Hold down the mouse button for a few seconds to export a movie. 
+  Each time you do this it will export a new movie.
+*/
 
 VideoExport videoExport;
 boolean recording = false;
 color bgcolor = #FFAA22;
 
 void setup() {
-  size(600, 600);
+  size(600, 600, P2D);
   noStroke();
   frameRate(30);
 
   videoExport = new VideoExport(this);
+  videoExport.dontSaveDebugInfo();
 }
 void draw() {
   background(bgcolor);
@@ -43,11 +42,11 @@ void draw() {
 void mousePressed() {
   recording = true;
   videoExport.setMovieFileName(frameCount + ".mp4");
+  videoExport.startMovie();
   bgcolor = color(random(255), random(255), random(255));
   println("Start movie.");
 }
 void mouseReleased() {
   recording = false;
   videoExport.endMovie();
-  println("End movie.");
 }

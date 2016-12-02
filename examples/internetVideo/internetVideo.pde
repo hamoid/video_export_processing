@@ -11,6 +11,7 @@ void setup() {
   // The standard frame rate for internet videos is about 
   // 30 frames per second 
   videoExport.setFrameRate(30);
+  videoExport.startMovie();
   
   // By default Processing tries to play at 60 frames
   // per second. That means that your exported videos
@@ -24,7 +25,13 @@ void setup() {
 }
 void draw() {
   background(33);
-  textSize(50);
-  text(frameCount, 50, 50);
+  textSize(150);
+  text(frameCount, 50, 300);
   videoExport.saveFrame();
+}
+void keyPressed() {
+  if (key == 'q') {
+    videoExport.endMovie();
+    exit();
+  }
 }

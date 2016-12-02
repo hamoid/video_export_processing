@@ -19,6 +19,7 @@ void setup() {
   cam = new Capture(this, 640, 480, FPS);
   cam.start();
   videoExport = new VideoExport(this, "camera.mp4", cam);
+  videoExport.startMovie();
 }
 void draw() {
   if (cam.available()) {
@@ -30,4 +31,10 @@ void draw() {
   // Here we don't save what we see on the display,
   // but the webcam input.
   videoExport.saveFrame();
+}
+void keyPressed() {
+  if (key == 'q') {
+    videoExport.endMovie();
+    exit();
+  }
 }

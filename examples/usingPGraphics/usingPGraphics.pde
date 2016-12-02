@@ -8,6 +8,7 @@ void setup() {
   pg = createGraphics(640, 480);
   
   videoExport = new VideoExport(this, "pgraphics.mp4", pg);
+  videoExport.startMovie();
 }
 void draw() {
   background(0);
@@ -19,4 +20,10 @@ void draw() {
   pg.endDraw();
 
   videoExport.saveFrame();
+}
+void keyPressed() {
+  if (key == 'q') {
+    videoExport.endMovie();
+    exit();
+  }
 }
