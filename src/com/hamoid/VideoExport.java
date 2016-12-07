@@ -227,7 +227,7 @@ public class VideoExport {
                 return;
             }
             if (pixelsByte == null) {
-                pixelsByte = new byte[pixelWidth * pixelHeight];
+                pixelsByte = new byte[img.pixelWidth * img.pixelHeight];
             }
             if (loadPixelsEnabled) {
                 img.loadPixels();
