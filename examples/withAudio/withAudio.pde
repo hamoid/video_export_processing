@@ -2,15 +2,8 @@ import com.hamoid.*;
 
 VideoExport videoExport;
 
-// Press 'q' to finish saving the movie and exit.
-
-// In some systems, if you close your sketch by pressing ESC, 
-// by closing the window, or by pressing STOP, the resulting 
-// movie might be corrupted. If that happens to you, use
-// videoExport.endMovie() like you see in this example. 
-
-// In some systems pressing ESC produces correct movies
-// and .endMovie() is not necessary.
+// This sketch ends automatically.
+// Run and wait for 10 seconds.
 
 float movieFPS = 30;
 float soundDuration = 10.03; // in seconds
