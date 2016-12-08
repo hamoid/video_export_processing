@@ -227,7 +227,7 @@ public class VideoExport {
                 return;
             }
             if (pixelsByte == null) {
-                pixelsByte = new byte[img.width * img.height * 3];
+                pixelsByte = new byte[img.pixelWidth * img.pixelHeight];
             }
             if (loadPixelsEnabled) {
                 img.loadPixels();
@@ -321,13 +321,13 @@ public class VideoExport {
         // "-b:v", "3000k" = video bit rate
         // "-i", "-" = pipe:0
 
-        if (img.width == 0 || img.height == 0) {
+        if (img.pixelWidth == 0 || img.pixelHeight == 0) {
             err("The export image size is 0!");
         }
         processBuilder = new ProcessBuilder(executable, "-y",
                 "-f", "rawvideo",
                 "-vcodec", "rawvideo",
-                "-s", img.width + "x" + img.height,
+                "-s", img.pixelWidth + "x" + img.pixelHeight,
                 "-pix_fmt", "rgb24",
                 "-r", "" + ffmpegFrameRate,
                 "-i", "-",
