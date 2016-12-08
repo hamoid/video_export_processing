@@ -43,17 +43,17 @@ For more details and download links, check the official ffmpeg website: [http://
 When you start a Processing sketch that uses this library you may be asked to indicate the location
 of your ffmpeg executable. This may happen once per sketch.
 
-## faq
+## Frequent issues and questions
 
 ### I changed the location of ffmpeg and the library stopped working. What can I do?
 
-Add ``` videoExport.forgetFfmpegPath()``` to your setup(), run your program once, then remove that line. This will trigger the library asking for the location of ffmpeg again, so you can point to the new location of ffmpeg.
+Add `videoExport.forgetFfmpegPath()` to your setup(), run your program once, then remove that line. This will trigger the library asking for the location of ffmpeg again, so you can point to the new location of ffmpeg.
 
 ### Sometimes the resulting mp4 video files are not working. Why?
 
 mp4 files contain essential metadata at the end of the file.
 The video export library saves this metadata when you call the
-```endMovie()``` method. If you don't call it, the movie may be
+`endMovie()` method. If you don't call it, the movie may be
 incomplete. The endMovie() method was added on version 0.1.5.
 
 ### I see an ffmpeg error related to "crf". Why?
@@ -62,6 +62,10 @@ This happens if your copy of ffmpeg does not include the h264 encoder.
 Not all ffmpeg binaries are equal, some include more features than others.
 Try downloading a different or more recent binary. Let me know if that
 doesn't work.
+
+### Odd widths and heights not allowed
+
+The exported video is compressed using the h264 codec. This codec does not allow odd image sizes like 111 x 113. Some computer screens actually have odd sizes like 1920 x 1059. If you use fullScreen() with such a screen, exporting will fail with an error like `height not divisible by 2 (1920x1059)`. This will be fixed in future versions by auto correcting the requested size to an even number and notifying the user.
 
 ## change log
 
