@@ -69,6 +69,8 @@ The exported video is compressed using the h264 codec. This codec does not allow
 
 ## change log
 
+* 0.1.6 - December 8th, 2016
+  * Fix for high dpi screens (Thanks to @LodenRietveld)
 * 0.1.5 - December 2nd, 2016
   * Refactoring. Clean up code.
   * Add .startMovie() and .endMovie() to prevent possible "missing-end-of-movie corruption".
