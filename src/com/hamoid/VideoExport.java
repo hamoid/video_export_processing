@@ -27,14 +27,24 @@
 
 package com.hamoid;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.nio.file.Files;
-import java.util.prefs.Preferences;
+import java.net.URISyntaxException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.swing.JOptionPane;
+
+import com.sun.jna.platform.win32.Kernel32;
+import com.sun.jna.platform.win32.Wincon;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PImage;
+import processing.data.JSONObject;
 
 /**
  * @example basic
@@ -43,10 +53,9 @@ import processing.core.PImage;
 public class VideoExport {
 
     public final static String VERSION = "##library.prettyVersion##";
-    protected final static String SETTINGS_FFMPEG_PATH = "settings_ffmpeg_path";
+    protected final static String SETTINGS_FFMPEG_PATH = "ffmpeg_path";
     protected final static String FFMPEG_PATH_UNSET = "ffmpeg_path_unset";
-    protected final String ffmpegMetadataComment =
-            "Exported using VideoExport for Processing - https://github.com/hamoid/VideoExport-for-Processing";
+    protected final String ffmpegMetadataComment = "Exported using VideoExport for Processing - https://github.com/hamoid/VideoExport-for-Processing";
     protected ProcessBuilder processBuilder;
     protected Process process;
     protected byte[] pixelsByte = null;
@@ -63,7 +72,8 @@ public class VideoExport {
     protected boolean ffmpegFound = false;
     protected File ffmpegOutputMsg;
     protected OutputStream ffmpeg;
-    protected Preferences settings;
+    protected JSONObject settings;
+    protected String settingsPath;
 
     /**
      * Constructor, usually called in the setup() method in your sketch to
@@ -72,6 +82,7 @@ public class VideoExport {
      * Using a default movie file name (processing-movie.mp4).
      *
      * @param parent
+     *            Pass "this" when constructing a VideoExport instance
      */
     public VideoExport(PApplet parent) {
         this(parent, "processing-movie.mp4", parent.g);
@@ -80,9 +91,11 @@ public class VideoExport {
     /**
      * Constructor that allows specifying a movie file name.
      *
-     * @param parent         Parent PApplet, normally "this" when called from setup()
-     * @param outputFileName The name of the video file to produce, for instance
-     *                       "beauty.mp4"
+     * @param parent
+     *            Parent PApplet, normally "this" when called from setup()
+     * @param outputFileName
+     *            The name of the video file to produce, for instance
+     *            "beauty.mp4"
      * @example basic
      */
     public VideoExport(PApplet parent, String outputFileName) {
@@ -92,15 +105,18 @@ public class VideoExport {
     /**
      * Constructor that allows to set a PImage to export as video (advanced)
      *
-     * @param parent         Parent PApplet, normally "this" when called from setup()
-     * @param outputFileName The name of the video file to produce, for instance
-     *                       "beauty.mp4"
-     * @param img            PImage object to export as video (can be a PGraphics, Movie,
-     *                       Capture...)
+     * @param parent
+     *            Parent PApplet, normally "this" when called from setup()
+     * @param outputFileName
+     *            The name of the video file to produce, for instance
+     *            "beauty.mp4"
+     * @param img
+     *            PImage object to export as video (can be a PGraphics, Movie,
+     *            Capture...)
      * @example usingPGraphics
      */
     public VideoExport(PApplet parent, final String outputFileName,
-                       PImage img) {
+            PImage img) {
 
         parent.registerMethod("dispose", this);
 
@@ -117,7 +133,28 @@ public class VideoExport {
         this.parent = parent;
         this.img = img;
 
-        settings = Preferences.userNodeForPackage(this.getClass());
+        // settings = Preferences.userNodeForPackage(this.getClass());
+        // The Preferences object does not work on Windows 10:
+        // it requires fiddling with the registry to add a missing key.
+        // Therefore I decided to find the location of VideoExport.jar in the
+        // disk, and create a settings file two folders above (which is the root
+        // folder of this library)
+        try {
+            File thisJar = new File(VideoExport.class.getProtectionDomain()
+                    .getCodeSource().getLocation().toURI().getPath())
+                            .getParentFile().getParentFile();
+            settingsPath = thisJar.getAbsolutePath() + File.separator
+                    + "settings.json";
+            File settingsFile = new File(settingsPath);
+            if (settingsFile.isFile()) {
+                settings = parent.loadJSONObject(settingsPath);
+            } else {
+                settings = new JSONObject();
+            }
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            System.err.println("Error loading settings.json");
+        }
 
         outputFilePath = parent.sketchPath(outputFileName);
         ffmpegFrameRate = 30f;
@@ -139,6 +176,7 @@ public class VideoExport {
      * one after the other.
      *
      * @param newMovieFileName
+     *            String with file name of the new movie to create
      */
     public void setMovieFileName(final String newMovieFileName) {
         outputFilePath = parent.sketchPath(newMovieFileName);
@@ -151,7 +189,8 @@ public class VideoExport {
     /**
      * Set the PImage element. Advanced use only. Optional.
      *
-     * @param img A PImage object. Probably used for off-screen exporting..
+     * @param img
+     *            A PImage object. Probably used for off-screen exporting..
      */
     public void setGraphics(PImage img) {
         this.img = img;
@@ -160,12 +199,14 @@ public class VideoExport {
     /**
      * Set the quality of the produced video file. Optional.
      *
-     * @param crf Video quality. A value between 0 (high compression) and 100
+     * @param crf
+     *            Video quality. A value between 0 (high compression) and 100
      *            (high quality, lossless). Default is 70.
-     * @param audioBitRate Audio quality (bit rate in kbps).
-     *                     128 is the default. 192 is very good.
-     *                     More than 256 does not make sense.
-     *                     Higher numbers produce heavier files.
+     * @param audioBitRate
+     *            Audio quality (bit rate in kbps).
+     *            128 is the default. 192 is very good.
+     *            More than 256 does not make sense.
+     *            Higher numbers produce heavier files.
      */
     public void setQuality(int crf, int audioBitRate) {
         if (ffmpeg != null) {
@@ -184,9 +225,10 @@ public class VideoExport {
     /**
      * Set the frame rate of the produced video file. Optional.
      *
-     * @param frameRate The frame rate at which the resulting video file should be
-     *                  played. The default is 30, which is the recommended for online
-     *                  video.
+     * @param frameRate
+     *            The frame rate at which the resulting video file should be
+     *            played. The default is 30, which is the recommended for online
+     *            video.
      */
     public void setFrameRate(float frameRate) {
         if (ffmpeg != null) {
@@ -197,23 +239,32 @@ public class VideoExport {
     }
 
     /**
-     * Tells VideoExport not to call loadPixels(). Use it only if you
-     * already call loadPixels() in your program. Useful to avoid calling it
-     * twice, which might hurt the performance a bit. Optional.
+     * You can tell VideoExport not to call loadPixels() internally.
+     * Use it only if you already call loadPixels() in your program.
+     * Useful to avoid calling it twice, which might hurt the
+     * performance a bit. Optional.
+     *
+     * @param doLoadPixels
+     *            Set to false to disable the internal loadPixels() call.
      */
-    public void dontCallLoadPixels() {
-        loadPixelsEnabled = false;
+    public void setLoadPixels(boolean doLoadPixels) {
+        loadPixelsEnabled = doLoadPixels;
     }
 
     /**
-     * Call this method if you don't want a debug text file saved together
-     * with the video file. The text file normally contains the output messages
-     * from ffmpeg, which may be useful for diagnosing problems. If video is
-     * being exported correctly you may want to call this method to avoid
-     * creating unnecessary files. Optional.
+     * Call this method to specify if you want a debug text file saved
+     * together with the video file. The text file normally contains the
+     * output messages from ffmpeg, which may be useful for diagnosing
+     * problems. If video is being exported correctly you may want to
+     * call videoExport.setDebugging(false) to avoid creating unnecessary
+     * files. Optional.
+     *
+     * @param saveDebugFile
+     *            Set to false to disable saving the ffmpeg output in a text
+     *            file
      */
-    public void dontSaveDebugInfo() {
-        saveDebugInfo = false;
+    public void setDebugging(boolean saveDebugFile) {
+        saveDebugInfo = saveDebugFile;
     }
 
     /**
@@ -255,32 +306,57 @@ public class VideoExport {
      * to run it.
      */
     protected void initialize() {
+        // Get the saved ffmpeg path from the settings file
+        // which maybe does not exist.
         String ffmpeg_path = getFfmpegPath();
+        // If it did not exist, try to guess where it is
         if (ffmpeg_path.equals(FFMPEG_PATH_UNSET)) {
-            String[] guess_paths = {"/usr/local/bin/ffmpeg",
-                    "/usr/bin/ffmpeg"};
+            String[] guess_paths = { "/usr/local/bin/ffmpeg",
+                    "/usr/bin/ffmpeg" };
             for (String guess_path : guess_paths) {
                 if ((new File(guess_path)).isFile()) {
                     ffmpeg_path = guess_path;
-                    settings.put(SETTINGS_FFMPEG_PATH, ffmpeg_path);
+                    settings.setString(SETTINGS_FFMPEG_PATH, ffmpeg_path);
+                    parent.saveJSONObject(settings, settingsPath);
                     break;
                 }
             }
+        } else {
+            // If it did exist in the settings file,
+            // check if the path is still valid
+            // (maybe the user moved ffmpeg to a different folder)
+            File ffmpegFile = new File(ffmpeg_path);
+            if (!ffmpegFile.isFile()) {
+                ffmpeg_path = FFMPEG_PATH_UNSET;
+            }
         }
+        // If it was not set, or if it was moved, ask the user where
+        // to find ffmpeg. We will try to start after the user makes
+        // a decision and onFfmpegSelected() is called.
         if (ffmpeg_path.equals(FFMPEG_PATH_UNSET)) {
-            System.out.println(
-                    "The ffmpeg program is required. Asking the user where it was downloaded...");
-            // Show Processing "select file" dialog
+            JOptionPane.showMessageDialog(parent.frame,
+                    "The VideoExport library requires ffmpeg,\n"
+                            + "a free command line tool.\n\n"
+                            + "If you don't have ffmpeg yet:\n\n"
+                            + "-- Windows / Mac --\n"
+                            + "1. Download a static build from http://ffmpeg.org\n"
+                            + "2. Unzip it\n\n" + "-- Linux --\n"
+                            + "1. Install ffmpeg using your package manager\n\n"
+                            + "-- When you already have ffmpeg --\n"
+                            + "Click OK and select the ffmpeg or ffmpeg.exe program");
+
+            // Show "select file" dialog
             parent.selectInput(
                     "Please select the previously downloaded ffmpeg or ffmpeg.exe executable",
                     "onFfmpegSelected", new File("/"), this);
         } else {
+            // If it was found, all good. Start.
             startFfmpeg(ffmpeg_path);
         }
     }
 
     public String getFfmpegPath() {
-        return settings.get(SETTINGS_FFMPEG_PATH, FFMPEG_PATH_UNSET);
+        return settings.getString(SETTINGS_FFMPEG_PATH, FFMPEG_PATH_UNSET);
     }
 
     /**
@@ -290,7 +366,8 @@ public class VideoExport {
      * Optional.
      */
     public void forgetFfmpegPath() {
-        settings.put(SETTINGS_FFMPEG_PATH, FFMPEG_PATH_UNSET);
+        settings.setString(SETTINGS_FFMPEG_PATH, FFMPEG_PATH_UNSET);
+        parent.saveJSONObject(settings, settingsPath);
     }
 
     /**
@@ -298,16 +375,18 @@ public class VideoExport {
      * the location of ffmpeg on the disk.
      *
      * @param selection
+     *            (internal)
      */
     public void onFfmpegSelected(File selection) {
         if (selection == null) {
             System.err.println(
                     "The VideoExport library requires ffmpeg but it was not found. "
-                            +
-                            "Please try again or read the library documentation.");
+                            + "Please try again or read the library documentation.");
         } else {
             String ffmpeg_path = selection.getAbsolutePath();
-            settings.put(SETTINGS_FFMPEG_PATH, ffmpeg_path);
+            System.out.println("ffmpeg selected at " + ffmpeg_path);
+            settings.setString(SETTINGS_FFMPEG_PATH, ffmpeg_path);
+            parent.saveJSONObject(settings, settingsPath);
             startFfmpeg(ffmpeg_path);
         }
     }
@@ -324,25 +403,17 @@ public class VideoExport {
         if (img.pixelWidth == 0 || img.pixelHeight == 0) {
             err("The export image size is 0!");
         }
-        processBuilder = new ProcessBuilder(executable, "-y",
-                "-f", "rawvideo",
-                "-vcodec", "rawvideo",
-                "-s", img.pixelWidth + "x" + img.pixelHeight,
-                "-pix_fmt", "rgb24",
-                "-r", "" + ffmpegFrameRate,
-                "-i", "-",
-                "-an",
-                "-vcodec", "h264",
-                "-pix_fmt", "yuv420p",
-                "-crf", "" + ffmpegCrfQuality,
+        processBuilder = new ProcessBuilder(executable, "-y", "-f", "rawvideo",
+                "-vcodec", "rawvideo", "-s",
+                img.pixelWidth + "x" + img.pixelHeight, "-pix_fmt", "rgb24",
+                "-r", "" + ffmpegFrameRate, "-i", "-", "-an", "-vcodec", "h264",
+                "-pix_fmt", "yuv420p", "-crf", "" + ffmpegCrfQuality,
                 "-metadata", "comment=" + ffmpegMetadataComment,
                 outputFilePath);
 
         processBuilder.redirectErrorStream(true);
-        if (saveDebugInfo) {
-            ffmpegOutputMsg = new File(parent.sketchPath("ffmpeg.txt"));
-            processBuilder.redirectOutput(ffmpegOutputMsg);
-        }
+        ffmpegOutputMsg = new File(parent.sketchPath("ffmpeg.txt"));
+        processBuilder.redirectOutput(ffmpegOutputMsg);
         processBuilder.redirectInput(ProcessBuilder.Redirect.PIPE);
         try {
             process = processBuilder.start();
@@ -373,15 +444,43 @@ public class VideoExport {
                 e.printStackTrace();
             }
             ffmpeg = null;
-            ffmpegOutputMsg = null;
         }
         if (process != null) {
             try {
-                // This delay is to avoid creating corrupted video files.
-                // I'm not sure it is useful.
-                Thread.sleep(500);
+                // Delay to avoid creating corrupted video files.
+                // Probably not useful: Thread.sleep(500);
+                // Using a different approach now, by sending the
+                // CTRL+C keys to ffmpeg if using Windows.
 
-                process.destroy();
+                if (PApplet.platform == PConstants.WINDOWS) {
+                    // Launch tasklist
+                    ProcessBuilder ps = new ProcessBuilder("tasklist");
+                    Process pr = ps.start();
+
+                    // Get all processes from tasklist
+                    BufferedReader allProcesses = new BufferedReader(
+                            new InputStreamReader(pr.getInputStream()));
+                    // Regex to find the word "ffmpeg.exe"
+                    Pattern isFfmpeg = Pattern
+                            .compile("ffmpeg\\.exe.*?([0-9]+)");
+                    String processDetails;
+                    // Iterate over all processes
+                    while ((processDetails = allProcesses.readLine()) != null) {
+                        Matcher m = isFfmpeg.matcher(processDetails);
+                        // Check if this process is ffmpeg.exe
+                        if (m.find()) {
+                            // If it is, send it CTRL+C to stop it
+                            Wincon wincon = Kernel32.INSTANCE;
+                            wincon.GenerateConsoleCtrlEvent(Wincon.CTRL_C_EVENT,
+                                    Integer.parseInt(m.group(1)));
+                            break;
+                        }
+                    }
+                } else {
+                    // In Linux and Mac tell the process to end
+                    process.destroy();
+                }
+
                 process.waitFor();
 
                 if (audioFilePath != null && !audioFilePath.isEmpty()) {
@@ -389,9 +488,16 @@ public class VideoExport {
                     audioFilePath = null;
                 }
 
+                if (!saveDebugInfo && ffmpegOutputMsg.isFile()) {
+                    ffmpegOutputMsg.delete();
+                    ffmpegOutputMsg = null;
+                }
+
                 PApplet.println(outputFilePath, "saved.");
             } catch (InterruptedException e) {
                 PApplet.println("Waiting for ffmpeg timed out!");
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             processBuilder = null;
@@ -426,22 +532,18 @@ public class VideoExport {
             return;
         }
 
-        processBuilder = new ProcessBuilder(getFfmpegPath(), "-y",
-                "-i", outputFilePath,
-                "-i", audioFilePath,
-                "-filter_complex", "[1:0]apad", "-shortest",
-                //"-vframes", "" + frameCount,
-                "-vcodec", "copy",
-                "-acodec", "aac",
-                "-b:a", ffmpegAudioBitRate + "k",
-                "-metadata", "comment=" + ffmpegMetadataComment,
+        processBuilder = new ProcessBuilder(getFfmpegPath(), "-y", "-i",
+                outputFilePath, "-i", audioFilePath, "-filter_complex",
+                "[1:0]apad", "-shortest",
+                // "-vframes", "" + frameCount,
+                "-vcodec", "copy", "-acodec", "aac", "-b:a",
+                ffmpegAudioBitRate + "k", "-metadata",
+                "comment=" + ffmpegMetadataComment,
                 parent.sketchFile("temp-with-audio.mp4").getAbsolutePath());
 
         processBuilder.redirectErrorStream(true);
-        if (saveDebugInfo) {
-            ffmpegOutputMsg = new File(parent.sketchPath("ffmpeg-audio.txt"));
-            processBuilder.redirectOutput(ffmpegOutputMsg);
-        }
+        ffmpegOutputMsg = new File(parent.sketchPath("ffmpeg-audio.txt"));
+        processBuilder.redirectOutput(ffmpegOutputMsg);
 
         try {
             process = processBuilder.start();
@@ -455,13 +557,16 @@ public class VideoExport {
                 // wait until done
                 process.waitFor();
                 new File(outputFilePath).delete();
-                parent.sketchFile("temp-with-audio.mp4").renameTo(new File
-                        (outputFilePath));
+                parent.sketchFile("temp-with-audio.mp4")
+                        .renameTo(new File(outputFilePath));
             } catch (InterruptedException e) {
                 PApplet.println(
                         "Waiting for ffmpeg while adding audio timed out!");
                 e.printStackTrace();
             }
+        }
+        if (!saveDebugInfo && ffmpegOutputMsg.isFile()) {
+            ffmpegOutputMsg.delete();
         }
         ffmpegOutputMsg = null;
         processBuilder = null;

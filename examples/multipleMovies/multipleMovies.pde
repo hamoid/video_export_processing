@@ -16,7 +16,7 @@ void setup() {
   frameRate(30);
 
   videoExport = new VideoExport(this);
-  videoExport.dontSaveDebugInfo();
+  videoExport.setDebugging(false);
 }
 void draw() {
   background(bgcolor);

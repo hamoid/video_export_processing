@@ -45,16 +45,19 @@ of your ffmpeg executable. This may happen once per sketch.
 
 ## Frequent issues and questions
 
-### I changed the location of ffmpeg and the library stopped working. What can I do?
+### What if I change the location of ffmpeg?
 
-Add `videoExport.forgetFfmpegPath()` to your setup(), run your program once, then remove that line. This will trigger the library asking for the location of ffmpeg again, so you can point to the new location of ffmpeg.
+The library should notice and ask you for its location again. The location
+information is saved in a json file which you can find in the library location.
+If you delete this json file the library will ask you for the location of ffmpeg
+and create the file again with the updated information.
 
 ### Sometimes the resulting mp4 video files are not working. Why?
 
 mp4 files contain essential metadata at the end of the file.
 The video export library saves this metadata when you call the
 `endMovie()` method. If you don't call it, the movie may be
-incomplete. The endMovie() method was added on version 0.1.5.
+incomplete. The endMovie() method was added in version 0.1.5.
 
 ### I see an ffmpeg error related to "crf". Why?
 
@@ -69,6 +72,15 @@ The exported video is compressed using the h264 codec. This codec does not allow
 
 ## change log
 
+* 0.1.7 - April 1st, 2017
+  * Setting are now saved in the libray folder. Using the Java Preferences was
+    giving errors on some Windows versions.
+  * New example added to produce a video based on FFT data and making sure audio
+    and video stay in sync.
+  * In Windows, when ending a video, CTRL+C is sent to ffmpeg to terminate
+    properly. This seems to fix corrupted videos on Windows.
+  * The library now notices if ffmpeg is not found (maybe because it was moved)
+    and asks again for its location.
 * 0.1.6 - December 8th, 2016
   * Fix for high dpi screens (Thanks to @LodenRietveld)
 * 0.1.5 - December 2nd, 2016
