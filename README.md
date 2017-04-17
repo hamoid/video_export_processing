@@ -72,6 +72,8 @@ The exported video is compressed using the h264 codec. This codec does not allow
 
 ## change log
 
+* 0.1.8 - April 17th, 2017
+  * Switch server url to https (attempt to solve broken installation inside the IDE)
 * 0.1.7 - April 1st, 2017
   * Setting are now saved in the libray folder. Using the Java Preferences was
     giving errors on some Windows versions.

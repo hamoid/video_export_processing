@@ -355,6 +355,33 @@ public class VideoExport {
         }
     }
 
+    /**
+     * Call this function to figure out how many frames your movie has so far.
+     *
+     * @return the number of frames added to the movie so far
+     */
+    public int getCurrentFrame() {
+        return frameCount;
+    }
+
+    /**
+     * You could use the returned value to display a time counter, a progress
+     * bar or to create periodic motion, for instance by feeding
+     * the returned value into the sin() function, and using the result to drive
+     * the position of an object.
+     *
+     * @return the duration of the movie (so far) in seconds
+     */
+    public float getCurrentTime() {
+        return frameCount / ffmpegFrameRate;
+    }
+
+    /**
+     * Call this if you need to figure out the path to the ffmpeg program
+     * (advanced).
+     *
+     * @return the path to the ffmpeg program as a String
+     */
     public String getFfmpegPath() {
         return settings.getString(SETTINGS_FFMPEG_PATH, FFMPEG_PATH_UNSET);
     }

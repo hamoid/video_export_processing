@@ -5,10 +5,11 @@ import ddf.minim.spi.*;
 
 VideoExport videoExport;
 
+String audioFilePath = "jingle.mp3";
+
 String SEP = "|";
 float movieFPS = 30;
 float frameDuration = 1 / movieFPS;
-float movieTime = 0;
 BufferedReader reader;
 
 void setup() {
@@ -24,15 +25,15 @@ void setup() {
   // experimentation. Otherwise every time you
   // run this program it re-generates the FFT
   // analysis.
-  audioToTextFile("jingle.mp3");
+  audioToTextFile(audioFilePath);
 
   // Open the text file we just created for reading
-  reader = createReader("jingle.mp3.txt");
+  reader = createReader(audioFilePath + ".txt");
 
   // Set up the video exporting
   videoExport = new VideoExport(this);
   videoExport.setFrameRate(movieFPS);
-  videoExport.setAudioFileName("jingle.mp3");
+  videoExport.setAudioFileName(audioFilePath);
   videoExport.startMovie();
 }
 void draw() {
@@ -66,7 +67,7 @@ void draw() {
     // I added an offset of half frame duration, 
     // but I'm not sure if it's useful nor what 
     // would be the ideal value. Please experiment :)
-    while (movieTime < soundTime + frameDuration * 0.5) {
+    while (videoExport.getCurrentTime() < soundTime + frameDuration * 0.5) {
       background(0);
       noStroke();
       // Iterate over all our data points (different
@@ -91,10 +92,6 @@ void draw() {
         popMatrix();
       }
       videoExport.saveFrame();
-      // Manually increment the movie time.
-      // In future versions I should add
-      // something like videoExport.getTime() instead.
-      movieTime += 1 / movieFPS; 
     }
   }
 }
