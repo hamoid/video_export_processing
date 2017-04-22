@@ -70,8 +70,31 @@ doesn't work.
 
 The exported video is compressed using the h264 codec. This codec does not allow odd image sizes like 111 x 113. Some computer screens actually have odd sizes like 1920 x 1059. If you use fullScreen() with such a screen, exporting will fail with an error like `height not divisible by 2 (1920x1059)`. This will be fixed in future versions by auto correcting the requested size to an even number and notifying the user.
 
+### How can I tweak the ffmpeg command the library runs?
+
+The first time the library runs it will produce a settings.json file, which will
+be placed in the library folder. This file can be carefully edited to adjust the
+ffmpeg parametrs used during the video creation. Why would you do this? ffmpeg
+accepts hundreds of parametrs to define which codec to use, how the codec should
+behave, etc. Ffmpeg also includes hundreds of audio and video filters that can
+be used and configured. It would not make sense for me to create hundreds of
+methods in the video export library to let you access all those features. 
+If you are and advanced user, you can tweak those settings yourself by editing
+settings.json to change the codec settings or apply special effects to the 
+resulting video files. See [this example](https://forum.processing.org/two/discussion/comment/95710/#Comment_95710).
+
 ## change log
 
+* 0.1.9 - April 22nd, 2017
+  * https URL is now known by the IDE, so it's possible to install again without
+    leaving the IDE.
+  * Solve issue when attaching sound. In Ubuntu, the AAC codec inside ffmpeg is
+    experimental, and had to be enabled in the command line.
+  * Allow user customization of the ffmpeg commands that the library runs by including
+    them inside settings.json, found in the library folder. This enables the user
+    to tweak the commands to enable filters like blur, vignette, add noise,
+    crop, etc. In future versions space characters should be allowed in those
+    filter arguments.
 * 0.1.8 - April 17th, 2017
   * Switch server url to https (attempt to solve broken installation inside the IDE)
 * 0.1.7 - April 1st, 2017
