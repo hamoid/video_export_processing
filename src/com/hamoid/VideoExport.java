@@ -54,8 +54,16 @@ public class VideoExport {
 
     public final static String VERSION = "##library.prettyVersion##";
     protected final static String SETTINGS_FFMPEG_PATH = "ffmpeg_path";
+    protected final static String SETTINGS_CMD_ENCODE_VIDEO = "encode_video";
+    protected final static String SETTINGS_CMD_ENCODE_AUDIO = "encode_audio";
     protected final static String FFMPEG_PATH_UNSET = "ffmpeg_path_unset";
-    protected final String ffmpegMetadataComment = "Exported using VideoExport for Processing - https://github.com/hamoid/VideoExport-for-Processing";
+    protected final static String CMD_ENCODE_VIDEO_DEFAULT = "[ffmpeg] -y -f rawvideo -vcodec rawvideo "
+            + "-s [width]x[height] -pix_fmt rgb24 -r [fps] -i - -an -vcodec h264 "
+            + "-pix_fmt yuv420p -crf [crf] -metadata comment=[comment] [output]";
+    protected final static String CMD_ENCODE_AUDIO_DEFAULT = "[ffmpeg] -y -i [inputvideo] -i [inputaudio] "
+            + "-filter_complex [1:0]apad -shortest -vcodec copy -acodec aac -b:a [bitrate]k "
+            + "-metadata comment=[comment] -strict -2 [output]";
+    protected final String ffmpegMetadataComment = "Exported using https://github.com/hamoid/VideoExport-for-Processing";
     protected ProcessBuilder processBuilder;
     protected Process process;
     protected byte[] pixelsByte = null;
@@ -150,6 +158,10 @@ public class VideoExport {
                 settings = parent.loadJSONObject(settingsPath);
             } else {
                 settings = new JSONObject();
+                settings.setString(SETTINGS_CMD_ENCODE_VIDEO,
+                        CMD_ENCODE_VIDEO_DEFAULT);
+                settings.setString(SETTINGS_CMD_ENCODE_AUDIO,
+                        CMD_ENCODE_AUDIO_DEFAULT);
             }
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -430,14 +442,32 @@ public class VideoExport {
         if (img.pixelWidth == 0 || img.pixelHeight == 0) {
             err("The export image size is 0!");
         }
-        processBuilder = new ProcessBuilder(executable, "-y", "-f", "rawvideo",
-                "-vcodec", "rawvideo", "-s",
-                img.pixelWidth + "x" + img.pixelHeight, "-pix_fmt", "rgb24",
-                "-r", "" + ffmpegFrameRate, "-i", "-", "-an", "-vcodec", "h264",
-                "-pix_fmt", "yuv420p", "-crf", "" + ffmpegCrfQuality,
-                "-metadata", "comment=" + ffmpegMetadataComment,
-                outputFilePath);
 
+        if (img.pixelWidth % 2 == 1 || img.pixelHeight % 2 == 1) {
+            err("Width and height can only be even numbers when using the h264 encoder\n"
+                    + "but the requested image size is " + img.pixelWidth + "x"
+                    + img.pixelHeight);
+        }
+
+        // Get command as one long string
+        String cmd = settings.getString(SETTINGS_CMD_ENCODE_VIDEO,
+                CMD_ENCODE_VIDEO_DEFAULT);
+        // Split the command into many strings
+        String[] cmdArgs = cmd.split(" ");
+        // Replace variables. I first split, then replace (instead of
+        // replace, then split) because the replacement may contain spaces.
+        // For instance the comment would be split into parts and
+        // break the command.
+        for (int i = 0; i < cmdArgs.length; i++) {
+            cmdArgs[i] = cmdArgs[i].replace("[ffmpeg]", executable);
+            cmdArgs[i] = cmdArgs[i].replace("[width]", "" + img.pixelWidth);
+            cmdArgs[i] = cmdArgs[i].replace("[height]", "" + img.pixelHeight);
+            cmdArgs[i] = cmdArgs[i].replace("[fps]", "" + ffmpegFrameRate);
+            cmdArgs[i] = cmdArgs[i].replace("[crf]", "" + ffmpegCrfQuality);
+            cmdArgs[i] = cmdArgs[i].replace("[comment]", ffmpegMetadataComment);
+            cmdArgs[i] = cmdArgs[i].replace("[output]", outputFilePath);
+        }
+        processBuilder = new ProcessBuilder(cmdArgs);
         processBuilder.redirectErrorStream(true);
         ffmpegOutputMsg = new File(parent.sketchPath("ffmpeg.txt"));
         processBuilder.redirectOutput(ffmpegOutputMsg);
@@ -559,15 +589,27 @@ public class VideoExport {
             return;
         }
 
-        processBuilder = new ProcessBuilder(getFfmpegPath(), "-y", "-i",
-                outputFilePath, "-i", audioFilePath, "-filter_complex",
-                "[1:0]apad", "-shortest",
-                // "-vframes", "" + frameCount,
-                "-vcodec", "copy", "-acodec", "aac", "-b:a",
-                ffmpegAudioBitRate + "k", "-metadata",
-                "comment=" + ffmpegMetadataComment,
-                parent.sketchFile("temp-with-audio.mp4").getAbsolutePath());
+        // Get command as one long string
+        String cmd = settings.getString(SETTINGS_CMD_ENCODE_AUDIO,
+                CMD_ENCODE_AUDIO_DEFAULT);
+        // Split the command into many strings
+        String[] cmdArgs = cmd.split(" ");
+        // Replace variables. I first split, then replace (instead of
+        // replace, then split) because the replacement may contain spaces.
+        // For instance the comment would be split into parts and
+        // break the command.
+        for (int i = 0; i < cmdArgs.length; i++) {
+            cmdArgs[i] = cmdArgs[i].replace("[ffmpeg]", getFfmpegPath());
+            cmdArgs[i] = cmdArgs[i].replace("[inputvideo]", outputFilePath);
+            cmdArgs[i] = cmdArgs[i].replace("[inputaudio]", audioFilePath);
+            cmdArgs[i] = cmdArgs[i].replace("[bitrate]",
+                    "" + ffmpegAudioBitRate);
+            cmdArgs[i] = cmdArgs[i].replace("[comment]", ffmpegMetadataComment);
+            cmdArgs[i] = cmdArgs[i].replace("[output]",
+                    parent.sketchFile("temp-with-audio.mp4").getAbsolutePath());
+        }
 
+        processBuilder = new ProcessBuilder(cmdArgs);
         processBuilder.redirectErrorStream(true);
         ffmpegOutputMsg = new File(parent.sketchPath("ffmpeg-audio.txt"));
         processBuilder.redirectOutput(ffmpegOutputMsg);
@@ -609,7 +651,7 @@ public class VideoExport {
     }
 
     protected void err(String msg) {
-        System.err.println("VideoExport error: " + msg);
+        System.err.println("\nVideoExport error: " + msg + "\n");
         System.exit(1);
     }
 
