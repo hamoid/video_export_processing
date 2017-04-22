@@ -12,22 +12,59 @@ float movieFPS = 30;
 float frameDuration = 1 / movieFPS;
 BufferedReader reader;
 
+/*
+   Example to visualize sound frequencies from
+   an audio file.
+    
+   Producing a file with audio and video in sync
+   is tricky. It gets easily out of sync.
+    
+   One approach, used in this example, is:
+   
+   Pass 1. Analyze the sound in a Processing sketch 
+           and output a text file including the FFT 
+           analysis data.
+   Pass 2. Load the data from pass 1 and use it to 
+           output frames for a video file, including 
+           the right frames to match the sound 
+           precisely at any given time.
+            
+   Using this technique it does not matter how fast
+   or slow your second program is, and you know that
+   no frames will be dropped (as may happen when
+   recording live).
+   
+   The difficulty of recording live graphics with
+   sound is that the frame rate is not always stable.
+   We may request 60 frames per second, but once in
+   a while a frame is not ready on time. So the
+   "speed of frames" (the frameRate) is not constant
+   while frames are produced, but they are probably
+   constant when played back. The "speed of audio",
+   on the other hand, is often constant. If audio
+   is constant but video is not, they get out of 
+   sync.
+*/
+
 void setup() {
   size(600, 600);
+
+  // Produce the video as fast as possible
+  frameRate(1000);
 
   // Read a sound file and output a txt file
   // with the FFT analysis.
   // It uses Minim, because the standard
   // Sound library did not work in my system.
 
-  // You could comment out this line once you
+  // You could comment out the next line once you
   // have produced the txt file to speed up
   // experimentation. Otherwise every time you
   // run this program it re-generates the FFT
   // analysis.
   audioToTextFile(audioFilePath);
 
-  // Open the text file we just created for reading
+  // Now open the text file we just created for reading
   reader = createReader(audioFilePath + ".txt");
 
   // Set up the video exporting
@@ -74,6 +111,8 @@ void draw() {
       // audio frequencies. First bass, then hihats)
       for (int i=1; i<p.length; i++) {
         float value = float(p[i]);
+        // do something with value (set positions,
+        // sizes, colors, angles, etc)
         pushMatrix();
         translate(width/2, height/2);
         if(i%2 == 1) {
@@ -97,7 +136,8 @@ void draw() {
 }
 
 // Minim based audio FFT to data text file conversion.
-// You can look at the txt file in the data folder
+// Non real-time, so you don't wait 5 minutes for a 5 minute song :)
+// You can look at the produced txt file in the data folder
 // after running this program to see how it looks like.
 void audioToTextFile(String fileName) {
   PrintWriter output;

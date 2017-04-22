@@ -32,15 +32,6 @@ void draw() {
 
 /*
    Note: if you want to visualize sound and want to
-   match the sound precisely, you should not do it
-   on real time. It will get out of sync. Instead:
-   1. Analize the sound in one Processing sketch. 
-      Output a text file with the FFT and amplitude data.
-   2. Produce the movie in a second sketch. This sketch
-      loads the text file produced in the first step
-      and outputs the right amount of frames to match
-      the sound duration.
-   By doing it like this it does not matter how fast
-   or slow your second program is.
-   I'll provide an example on the next library upgrade.
+   match the sound precisely see the "withAudioViz"
+   example.
 */
