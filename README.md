@@ -1,6 +1,6 @@
 # Video Export for Processing
 
-This library interfaces with ffmpeg and makes it easy to export video files out
+This library interfaces with FFmpeg and makes it easy to export video files out
 of Processing.
 
 ## Example
@@ -28,9 +28,9 @@ void keyPressed() {
 }
 ```
 
-## ffmpeg
+## FFmpeg
 
-You need to download and install [ffmpeg](http://ffmpeg.org/) on your system before you can use this library.
+You need to download and install [FFmpeg](http://ffmpeg.org/) on your system before you can use this library.
 Note that you might already have it installed! You can find out by typing ffmpeg or ffmpeg.exe
 in the terminal. If the program is not found:
 
@@ -38,18 +38,18 @@ in the terminal. If the program is not found:
 * Windows: get a [static 32bit or 64bit binary](http://ffmpeg.zeranoe.com/builds/)
 * Mac: get a [static 64bit binary](http://evermeet.cx/ffmpeg/)
 
-For more details and download links, check the official ffmpeg website: [http://ffmpeg.org](http://ffmpeg.org/)
+For more details and download links, check the official FFmpeg website: [http://ffmpeg.org](http://ffmpeg.org/)
 
 When you start a Processing sketch that uses this library you may be asked to indicate the location
-of your ffmpeg executable. This may happen once per sketch.
+of your FFmpeg executable. This may happen once per sketch.
 
 ## Frequent issues and questions
 
-### What if I change the location of ffmpeg?
+### What if I change the location of FFmpeg?
 
 The library should notice and ask you for its location again. The location
 information is saved in a json file which you can find in the library location.
-If you delete this json file the library will ask you for the location of ffmpeg
+If you delete this json file the library will ask you for the location of FFmpeg
 and create the file again with the updated information.
 
 ### Sometimes the resulting mp4 video files are not working. Why?
@@ -59,10 +59,10 @@ The video export library saves this metadata when you call the
 `endMovie()` method. If you don't call it, the movie may be
 incomplete. The endMovie() method was added in version 0.1.5.
 
-### I see an ffmpeg error related to "crf". Why?
+### I see an FFmpeg error related to "crf". Why?
 
-This happens if your copy of ffmpeg does not include the h264 encoder.
-Not all ffmpeg binaries are equal, some include more features than others.
+This happens if your copy of FFmpeg does not include the h264 encoder.
+Not all FFmpeg binaries are equal, some include more features than others.
 Try downloading a different or more recent binary. Let me know if that
 doesn't work.
 
@@ -70,13 +70,13 @@ doesn't work.
 
 The exported video is compressed using the h264 codec. This codec does not allow odd image sizes like 111 x 113. Some computer screens actually have odd sizes like 1920 x 1059. If you use fullScreen() with such a screen, exporting will fail with an error like `height not divisible by 2 (1920x1059)`. This will be fixed in future versions by auto correcting the requested size to an even number and notifying the user.
 
-### How can I tweak the ffmpeg command the library runs?
+### How can I tweak the FFmpeg command the library runs?
 
 The first time the library runs it will produce a settings.json file, which will
 be placed in the library folder. This file can be carefully edited to adjust the
-ffmpeg parametrs used during the video creation. Why would you do this? ffmpeg
+FFmpeg parameters used during the video creation. Why would you do this? FFmpeg
 accepts hundreds of parametrs to define which codec to use, how the codec should
-behave, etc. Ffmpeg also includes hundreds of audio and video filters that can
+behave, etc. FFmpeg also includes hundreds of audio and video filters that can
 be used and configured. It would not make sense for me to create hundreds of
 methods in the video export library to let you access all those features. 
 If you are and advanced user, you can tweak those settings yourself by editing
@@ -88,9 +88,9 @@ resulting video files. See [this example](https://forum.processing.org/two/discu
 * 0.1.9 - April 22nd, 2017
   * https URL is now known by the IDE, so it's possible to install again without
     leaving the IDE.
-  * Solve issue when attaching sound. In Ubuntu, the AAC codec inside ffmpeg is
+  * Solve issue when attaching sound. In Ubuntu, the AAC codec inside FFmpeg is
     experimental, and had to be enabled in the command line.
-  * Allow user customization of the ffmpeg commands that the library runs by including
+  * Allow user customization of the FFmpeg commands that the library runs by including
     them inside settings.json, found in the library folder. This enables the user
     to tweak the commands to enable filters like blur, vignette, add noise,
     crop, etc. In future versions space characters should be allowed in those
@@ -102,9 +102,9 @@ resulting video files. See [this example](https://forum.processing.org/two/discu
     giving errors on some Windows versions.
   * New example added to produce a video based on FFT data and making sure audio
     and video stay in sync.
-  * In Windows, when ending a video, CTRL+C is sent to ffmpeg to terminate
+  * In Windows, when ending a video, CTRL+C is sent to FFmpeg to terminate
     properly. This seems to fix corrupted videos on Windows.
-  * The library now notices if ffmpeg is not found (maybe because it was moved)
+  * The library now notices if FFmpeg is not found (maybe because it was moved)
     and asks again for its location.
 * 0.1.6 - December 8th, 2016
   * Fix for high dpi screens (Thanks to @LodenRietveld)
