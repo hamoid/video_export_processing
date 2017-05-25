@@ -83,6 +83,10 @@ If you are and advanced user, you can tweak those settings yourself by editing
 settings.json to change the codec settings or apply special effects to the 
 resulting video files. See [this example](https://forum.processing.org/two/discussion/comment/95710/#Comment_95710).
 
+### NoSuchMethodError when calling endMovie()
+
+There seems to be a conflict between the Video Export library and the Video library. Both use different versions of the JNA library. See this discussion: https://github.com/hamoid/video_export_processing/issues/38
+
 ## change log
 
 * 0.1.9 - April 22nd, 2017
