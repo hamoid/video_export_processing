@@ -187,10 +187,10 @@ void audioToTextFile(String fileName) {
     // The first L and R values in each row are low frequencies (bass)
     // and they go towards high frequency as we advance towards
     // the end of the line.
-    StringBuilder msg = new StringBuilder(nf(chunkStartIndex/sampleRate, 0, 3));
+    StringBuilder msg = new StringBuilder(nf(chunkStartIndex/sampleRate, 0, 3).replace(',', '.'));
     for (int i=0; i<fftSlices; ++i) {
-      msg.append(SEP + nf(fftL.getAvg(i), 0, 4));
-      msg.append(SEP + nf(fftR.getAvg(i), 0, 4));
+      msg.append(SEP + nf(fftL.getAvg(i), 0, 4).replace(',', '.'));
+      msg.append(SEP + nf(fftR.getAvg(i), 0, 4).replace(',', '.'));
     }
     output.println(msg.toString());
   }
