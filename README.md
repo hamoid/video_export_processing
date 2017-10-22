@@ -89,6 +89,9 @@ There seems to be a conflict between the Video Export library and the Video libr
 
 ## change log
 
+* 0.2.0 - October 22nd, 2017
+  * Minor change: when calling nf(), replace ',' with '.'. Some systems may use
+    ',' due to localization, which fails later when parsing the csv file.
 * 0.1.9 - April 22nd, 2017
   * https URL is now known by the IDE, so it's possible to install again without
     leaving the IDE.
