@@ -399,6 +399,16 @@ public class VideoExport {
     }
 
     /**
+     * Call this method if you know the path to ffmpeg on your computer
+     * (advanced).
+     * @param path
+     */
+    public void setFfmpegPath(String path) {
+        settings.setString(SETTINGS_FFMPEG_PATH, path);
+        parent.saveJSONObject(settings, settingsPath);
+    }
+
+    /**
      * Makes the library forget about where the ffmpeg binary was located.
      * Useful if you moved ffmpeg to a different location. After calling this
      * function the library will ask you again for the location of ffmpeg.
