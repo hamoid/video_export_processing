@@ -78,7 +78,7 @@ public class VideoExport {
     protected int ffmpegAudioBitRate;
     protected float ffmpegFrameRate;
     protected boolean ffmpegFound = false;
-    protected File ffmpegOutputMsg;
+    protected File ffmpegOutputLog;
     protected OutputStream ffmpeg;
     protected JSONObject settings;
     protected String settingsPath;
@@ -308,7 +308,7 @@ public class VideoExport {
                 frameCount++;
             } catch (Exception e) {
                 e.printStackTrace();
-                err();
+                err(ffmpegOutputLog);
             }
         }
     }
@@ -479,14 +479,14 @@ public class VideoExport {
         }
         processBuilder = new ProcessBuilder(cmdArgs);
         processBuilder.redirectErrorStream(true);
-        ffmpegOutputMsg = new File(parent.sketchPath("ffmpeg.txt"));
-        processBuilder.redirectOutput(ffmpegOutputMsg);
+        ffmpegOutputLog = new File(parent.sketchPath("ffmpeg.txt"));
+        processBuilder.redirectOutput(ffmpegOutputLog);
         processBuilder.redirectInput(ProcessBuilder.Redirect.PIPE);
         try {
             process = processBuilder.start();
         } catch (Exception e) {
             e.printStackTrace();
-            err();
+            err(ffmpegOutputLog);
         }
 
         ffmpeg = process.getOutputStream();
@@ -555,9 +555,9 @@ public class VideoExport {
                     audioFilePath = null;
                 }
 
-                if (!saveDebugInfo && ffmpegOutputMsg.isFile()) {
-                    ffmpegOutputMsg.delete();
-                    ffmpegOutputMsg = null;
+                if (!saveDebugInfo && ffmpegOutputLog.isFile()) {
+                    ffmpegOutputLog.delete();
+                    ffmpegOutputLog = null;
                 }
 
                 PApplet.println(outputFilePath, "saved.");
@@ -621,14 +621,15 @@ public class VideoExport {
 
         processBuilder = new ProcessBuilder(cmdArgs);
         processBuilder.redirectErrorStream(true);
-        ffmpegOutputMsg = new File(parent.sketchPath("ffmpeg-audio.txt"));
-        processBuilder.redirectOutput(ffmpegOutputMsg);
+        File ffmpegOutputLogAudio = new File(parent.sketchPath("ffmpeg-audio" +
+                ".txt"));
+        processBuilder.redirectOutput(ffmpegOutputLogAudio);
 
         try {
             process = processBuilder.start();
         } catch (IOException e) {
             e.printStackTrace();
-            err();
+            err(ffmpegOutputLogAudio);
         }
 
         if (process != null) {
@@ -644,10 +645,9 @@ public class VideoExport {
                 e.printStackTrace();
             }
         }
-        if (!saveDebugInfo && ffmpegOutputMsg.isFile()) {
-            ffmpegOutputMsg.delete();
+        if (!saveDebugInfo && ffmpegOutputLogAudio.isFile()) {
+            ffmpegOutputLogAudio.delete();
         }
-        ffmpegOutputMsg = null;
         processBuilder = null;
         process = null;
 
@@ -665,8 +665,8 @@ public class VideoExport {
         System.exit(1);
     }
 
-    protected void err() {
-        err("Ffmpeg failed. Study " + ffmpegOutputMsg + " for more details.");
+    protected void err(File f) {
+        err("Ffmpeg failed. Study " + f + " for more details.");
     }
 
 }
