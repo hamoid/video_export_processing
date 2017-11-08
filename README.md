@@ -89,6 +89,8 @@ There seems to be a conflict between the Video Export library and the Video libr
 
 ## change log
 
+* 0.2.1 - November 8th, 2017
+  * Add .setFfmpegPath() and fix [issue 41](https://github.com/hamoid/video_export_processing/issues/41)
 * 0.2.0 - October 22nd, 2017
   * Minor change: when calling nf(), replace ',' with '.'. Some systems may use
     ',' due to localization, which fails later when parsing the csv file.
