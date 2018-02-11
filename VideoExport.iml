@@ -8,6 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="p5" level="project" />
-    <orderEntry type="library" exported="" name="jna-platform" level="project" />
+    <orderEntry type="library" name="jna-platform" level="project" />
   </component>
 </module>

@@ -89,6 +89,10 @@ There seems to be a conflict between the Video Export library and the Video libr
 
 ## change log
 
+* 0.2.2 - February 11th, 2018
+  * Re-add jna.jar and jna-platform.jar, fixing broken exported applications
+    (issue [47](https://github.com/hamoid/video_export_processing/issues/47) ) 
+    and the Windows version.
 * 0.2.1 - November 8th, 2017
   * Add .setFfmpegPath() and fix [issue 41](https://github.com/hamoid/video_export_processing/issues/41)
 * 0.2.0 - October 22nd, 2017

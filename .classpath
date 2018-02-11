@@ -3,11 +3,11 @@
 	<classpathentry kind="src" output="bin" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/home/funpro/Desktop/edu/processing-3.2.3/lib"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/usr/share/processing/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/funpro/Desktop/edu/processing-3.2.3/core/library/core.jar"/>
-	<classpathentry kind="lib" path="/home/funpro/workspace/VideoExport/lib/jna-4.4.0.jar"/>
-	<classpathentry kind="lib" path="/home/funpro/workspace/VideoExport/lib/jna-platform-4.4.0.jar"/>
+	<classpathentry kind="lib" path="/usr/share/processing/core/library/core.jar"/>
+	<classpathentry kind="lib" path="/usr/share/processing/lib/jna.jar"/>
+	<classpathentry kind="lib" path="/usr/share/processing/lib/jna-platform.jar"/>
 	<classpathentry kind="output" path="resources/code"/>
 </classpath>

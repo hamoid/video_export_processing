@@ -66,7 +66,7 @@
 	<path id="classpath">
 		<fileset dir="${classpath.local.location}" includes="${classpath.local.include}" />
 		<fileset dir="${classpath.libraries.location}" includes="**/*.jar" />
-		<fileset dir="/usr/share/processing/lib" includes="**/jna*.jar" />
+		<!--fileset dir="/usr/share/processing/lib" includes="**/jna*.jar" /-->
 		<fileset dir="${project.lib}" includes="**/*.jar" />
 	</path>		
 
