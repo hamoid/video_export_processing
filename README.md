@@ -41,7 +41,7 @@ in the terminal. If the program is not found:
 For more details and download links, check the official FFmpeg website: [http://ffmpeg.org](http://ffmpeg.org/)
 
 When you start a Processing sketch that uses this library you may be asked to indicate the location
-of your FFmpeg executable. This may happen once per sketch.
+of your FFmpeg executable.
 
 ## Frequent issues and questions
 
