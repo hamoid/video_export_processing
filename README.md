@@ -89,6 +89,10 @@ There seems to be a conflict between the Video Export library and the Video libr
 
 ## change log
 
+* 0.2.3 - February 28th, 2018
+  * Allow spaces in the FFmpeg command (#37)
+  * Allow setting the FFmpeg command settings from code, not just in the json
+  file (#36)
 * 0.2.2 - February 11th, 2018
   * Re-add jna.jar and jna-platform.jar, fixing broken exported applications
     (issue [47](https://github.com/hamoid/video_export_processing/issues/47) ) 
