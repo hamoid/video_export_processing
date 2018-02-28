@@ -20,7 +20,7 @@ void setup() {
   // with the current Processing frame rate. For instance you could have a 
   // Processing sketch that does heavy computation and renders only one frame 
   // every 5 seconds, but here you could still set that the resulting video should 
-  // play at 30 frames per second.  
+  // play at 10 frames per second. Default: 30 fps.
   videoExport.setFrameRate(10);  
   
   // If your sketch already calls loadPixels(), you can tell videoExport to 
@@ -32,12 +32,11 @@ void setup() {
   // creating .txt files containing debug information.
   videoExport.setDebugging(false);
 
-  // Use the next line once if you have change the
-  // location of the ffmpeg tool. This will make
-  // the library ask for it's location again.
+  // Use the next line once if you changed the location of the ffmpeg tool.
+  // This will make the library ask for it's location again.
   //videoExport.forgetFfmpegPath();
 
-  // Start exporting after adjusting the settings.
+  // Now that we are done changing the settings we can start exporting a movie. 
   videoExport.startMovie();
 }
 void draw() {

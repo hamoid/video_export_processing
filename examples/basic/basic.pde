@@ -9,7 +9,7 @@ VideoExport videoExport;
 // movie might be corrupted. If that happens to you, use
 // videoExport.endMovie() like you see in this example.
 
-// In some systems pressing ESC produces correct movies
+// In other systems pressing ESC produces correct movies
 // and .endMovie() is not necessary.
 
 void setup() {
