@@ -469,13 +469,17 @@ public class VideoExport {
         // For instance the comment would be split into parts and
         // break the command.
         for (int i = 0; i < cmdArgs.length; i++) {
-            cmdArgs[i] = cmdArgs[i].replace("[ffmpeg]", executable);
-            cmdArgs[i] = cmdArgs[i].replace("[width]", "" + img.pixelWidth);
-            cmdArgs[i] = cmdArgs[i].replace("[height]", "" + img.pixelHeight);
-            cmdArgs[i] = cmdArgs[i].replace("[fps]", "" + ffmpegFrameRate);
-            cmdArgs[i] = cmdArgs[i].replace("[crf]", "" + ffmpegCrfQuality);
-            cmdArgs[i] = cmdArgs[i].replace("[comment]", ffmpegMetadataComment);
-            cmdArgs[i] = cmdArgs[i].replace("[output]", outputFilePath);
+            if (cmdArgs[i].contains("[")) {
+                cmdArgs[i] = cmdArgs[i]
+                        .replace("[ffmpeg]", executable)
+                        .replace("[width]", "" + img.pixelWidth)
+                        .replace("[height]", "" + img.pixelHeight)
+                        .replace("[fps]", "" + ffmpegFrameRate)
+                        .replace("[crf]", "" + ffmpegCrfQuality)
+                        .replace("[comment]", ffmpegMetadataComment)
+                        .replace("[output]", outputFilePath);
+            }
+
         }
         processBuilder = new ProcessBuilder(cmdArgs);
         processBuilder.redirectErrorStream(true);
@@ -604,19 +608,24 @@ public class VideoExport {
                 CMD_ENCODE_AUDIO_DEFAULT);
         // Split the command into many strings
         String[] cmdArgs = cmd.split(" ");
+        String tmpAudioFile = "temp-with-audio.mp4";
+
         // Replace variables. I first split, then replace (instead of
         // replace, then split) because the replacement may contain spaces.
         // For instance the comment would be split into parts and
         // break the command.
         for (int i = 0; i < cmdArgs.length; i++) {
-            cmdArgs[i] = cmdArgs[i].replace("[ffmpeg]", getFfmpegPath());
-            cmdArgs[i] = cmdArgs[i].replace("[inputvideo]", outputFilePath);
-            cmdArgs[i] = cmdArgs[i].replace("[inputaudio]", audioFilePath);
-            cmdArgs[i] = cmdArgs[i].replace("[bitrate]",
-                    "" + ffmpegAudioBitRate);
-            cmdArgs[i] = cmdArgs[i].replace("[comment]", ffmpegMetadataComment);
-            cmdArgs[i] = cmdArgs[i].replace("[output]",
-                    parent.sketchFile("temp-with-audio.mp4").getAbsolutePath());
+            if (cmdArgs[i].contains("[")) {
+                cmdArgs[i] = cmdArgs[i]
+                        .replace("[ffmpeg]", getFfmpegPath())
+                        .replace("[inputvideo]", outputFilePath)
+                        .replace("[inputaudio]", audioFilePath)
+                        .replace("[bitrate]", "" + ffmpegAudioBitRate)
+                        .replace("[comment]", ffmpegMetadataComment)
+                        .replace("[output]",
+                                parent.sketchFile(tmpAudioFile)
+                                        .getAbsolutePath());
+            }
         }
 
         processBuilder = new ProcessBuilder(cmdArgs);
@@ -637,7 +646,7 @@ public class VideoExport {
                 // wait until done
                 process.waitFor();
                 new File(outputFilePath).delete();
-                parent.sketchFile("temp-with-audio.mp4")
+                parent.sketchFile(tmpAudioFile)
                         .renameTo(new File(outputFilePath));
             } catch (InterruptedException e) {
                 PApplet.println(
