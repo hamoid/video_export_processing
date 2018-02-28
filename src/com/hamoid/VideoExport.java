@@ -44,7 +44,9 @@ import com.sun.jna.platform.win32.Wincon;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PImage;
+import processing.data.JSONArray;
 import processing.data.JSONObject;
+import processing.data.StringList;
 
 /**
  * @example basic
@@ -57,13 +59,10 @@ public class VideoExport {
     protected final static String SETTINGS_CMD_ENCODE_VIDEO = "encode_video";
     protected final static String SETTINGS_CMD_ENCODE_AUDIO = "encode_audio";
     protected final static String FFMPEG_PATH_UNSET = "ffmpeg_path_unset";
-    protected final static String CMD_ENCODE_VIDEO_DEFAULT = "[ffmpeg] -y -f rawvideo -vcodec rawvideo "
-            + "-s [width]x[height] -pix_fmt rgb24 -r [fps] -i - -an -vcodec h264 "
-            + "-pix_fmt yuv420p -crf [crf] -metadata comment=[comment] [output]";
-    protected final static String CMD_ENCODE_AUDIO_DEFAULT = "[ffmpeg] -y -i [inputvideo] -i [inputaudio] "
-            + "-filter_complex [1:0]apad -shortest -vcodec copy -acodec aac -b:a [bitrate]k "
-            + "-metadata comment=[comment] -strict -2 [output]";
-    protected final String ffmpegMetadataComment = "Exported using https://github.com/hamoid/VideoExport-for-Processing";
+    protected static JSONArray CMD_ENCODE_AUDIO_DEFAULT;
+    protected static JSONArray CMD_ENCODE_VIDEO_DEFAULT;
+    protected final String ffmpegMetadataComment = "Made with " +
+            "Video Export for Processing - https://git.io/vAXLk";
     protected ProcessBuilder processBuilder;
     protected Process process;
     protected byte[] pixelsByte = null;
@@ -141,6 +140,41 @@ public class VideoExport {
         this.parent = parent;
         this.img = img;
 
+        CMD_ENCODE_VIDEO_DEFAULT = new JSONArray(new StringList(
+                new String[]{
+                        "[ffmpeg]",                       // ffmpeg executable
+                        "-y",                             // overwrite old file
+                        "-f", "rawvideo",                 // format rgb raw
+                        "-vcodec", "rawvideo",            // in codec rgb raw
+                        "-s", "[width]x[height]",         // size
+                        "-pix_fmt", "rgb24",              // pix format rgb24
+                        "-r", "[fps]",                    // frame rate
+                        "-i", "-",                        // pipe input
+                        "-an",                            // no audio
+                        "-vcodec", "h264",                // out codec h264
+                        "-pix_fmt", "yuv420p",            // color space yuv420p
+                        "-crf", "[crf]",                  // quality
+                        "-metadata", "comment=[comment]", // comment
+                        "[output]"                        // output file
+                }));
+
+        CMD_ENCODE_AUDIO_DEFAULT = new JSONArray(new StringList(
+                new String[]{
+                        "[ffmpeg]",                       // ffmpeg executable
+                        "-y",                             // overwrite old file
+                        "-i", "[inputvideo]",             // video file path
+                        "-i", "[inputaudio]",             // audio file path
+                        "-filter_complex", "[1:0]apad",   // pad with silence
+                        "-shortest",                      // match shortest file
+                        "-vcodec", "copy",                // don't reencode vid
+                        "-acodec", "aac",                 // aac audio encoding
+                        "-b:a", "[bitrate]k",             // bit rate (quality)
+                        "-metadata", "comment=[comment]", // comment
+                        // https://stackoverflow.com/questions/28586397/ffmpeg-error-while-re-encoding-video#28587897
+                        "-strict", "-2",                  // enable aac
+                        "[output]"                        // output file
+                }));
+
         // settings = Preferences.userNodeForPackage(this.getClass());
         // The Preferences object does not work on Windows 10:
         // it requires fiddling with the registry to add a missing key.
@@ -156,11 +190,27 @@ public class VideoExport {
             File settingsFile = new File(settingsPath);
             if (settingsFile.isFile()) {
                 settings = parent.loadJSONObject(settingsPath);
+
+                // Update config files from v0.2.2
+                Object o;
+
+                // If String, make it JSONArray
+                o = settings.get(SETTINGS_CMD_ENCODE_VIDEO);
+                if(o instanceof String) {
+                    settings.setJSONArray(SETTINGS_CMD_ENCODE_VIDEO,
+                            toJSONArray((String) o));
+                }
+                // If String, make it JSONArray
+                o = settings.get(SETTINGS_CMD_ENCODE_AUDIO);
+                if(o instanceof String) {
+                    settings.setJSONArray(SETTINGS_CMD_ENCODE_AUDIO,
+                            toJSONArray((String) o));
+                }
             } else {
                 settings = new JSONObject();
-                settings.setString(SETTINGS_CMD_ENCODE_VIDEO,
+                settings.setJSONArray(SETTINGS_CMD_ENCODE_VIDEO,
                         CMD_ENCODE_VIDEO_DEFAULT);
-                settings.setString(SETTINGS_CMD_ENCODE_AUDIO,
+                settings.setJSONArray(SETTINGS_CMD_ENCODE_AUDIO,
                         CMD_ENCODE_AUDIO_DEFAULT);
             }
         } catch (URISyntaxException e) {
@@ -277,6 +327,38 @@ public class VideoExport {
      */
     public void setDebugging(boolean saveDebugFile) {
         saveDebugInfo = saveDebugFile;
+    }
+
+    /**
+     * Advanced. You can use this if you want to change how ffmpeg behaves,
+     * for example to add filters, custom encodings, or anything else you
+     * could do with ffmpeg in the command line. See
+     * https://forum.processing.org/two/discussion/22139/video-export-library-0-1-9
+     * To find the default values find CMD_ENCODE_VIDEO_DEFAULT in
+     * https://github.com/hamoid/video_export_processing/blob/master/src/com/hamoid/VideoExport.java
+     *
+     * @param newSettings An array with all the command line
+     *                    arguments to call to produce a video.
+     */
+    public void setFfmpegVideoSettings(String[] newSettings) {
+        settings.setJSONArray(SETTINGS_CMD_ENCODE_VIDEO,
+                new JSONArray(new StringList(newSettings)));
+    }
+
+    /**
+     * Advanced. You can use this if you want to change how ffmpeg behaves,
+     * for example to add filters, custom encodings, or anything else you
+     * could do with ffmpeg in the command line. See
+     * https://forum.processing.org/two/discussion/22139/video-export-library-0-1-9
+     * To find the default values find CMD_ENCODE_AUDIO_DEFAULT in
+     * https://github.com/hamoid/video_export_processing/blob/master/src/com/hamoid/VideoExport.java
+     *
+     * @param newSettings An array with all the command line
+     *                    arguments to call to produce a video.
+     */
+    public void setFfmpegAudioSettings(String[] newSettings) {
+        settings.setJSONArray(SETTINGS_CMD_ENCODE_AUDIO,
+                new JSONArray(new StringList(newSettings)));
     }
 
     /**
@@ -459,11 +541,15 @@ public class VideoExport {
                     + img.pixelHeight);
         }
 
-        // Get command as one long string
-        String cmd = settings.getString(SETTINGS_CMD_ENCODE_VIDEO,
-                CMD_ENCODE_VIDEO_DEFAULT);
-        // Split the command into many strings
-        String[] cmdArgs = cmd.split(" ");
+        // Get command as JSONArray
+        JSONArray cmd;
+        try {
+            cmd = settings.getJSONArray(SETTINGS_CMD_ENCODE_VIDEO);
+        } catch (RuntimeException e) {
+            cmd = CMD_ENCODE_VIDEO_DEFAULT;
+        }
+        // JSONArray -> String[]
+        String[] cmdArgs = cmd.getStringArray();
         // Replace variables. I first split, then replace (instead of
         // replace, then split) because the replacement may contain spaces.
         // For instance the comment would be split into parts and
@@ -603,11 +689,16 @@ public class VideoExport {
             return;
         }
 
-        // Get command as one long string
-        String cmd = settings.getString(SETTINGS_CMD_ENCODE_AUDIO,
-                CMD_ENCODE_AUDIO_DEFAULT);
-        // Split the command into many strings
-        String[] cmdArgs = cmd.split(" ");
+        // Get command as JSONArray
+        JSONArray cmd;
+        try {
+            cmd = settings.getJSONArray(SETTINGS_CMD_ENCODE_AUDIO);
+        } catch (RuntimeException e) {
+            cmd = CMD_ENCODE_AUDIO_DEFAULT;
+        }
+        // JSONArray -> String[]
+        String[] cmdArgs = cmd.getStringArray();
+
         String tmpAudioFile = "temp-with-audio.mp4";
 
         // Replace variables. I first split, then replace (instead of
@@ -630,8 +721,8 @@ public class VideoExport {
 
         processBuilder = new ProcessBuilder(cmdArgs);
         processBuilder.redirectErrorStream(true);
-        File ffmpegOutputLogAudio = new File(parent.sketchPath("ffmpeg-audio" +
-                ".txt"));
+        File ffmpegOutputLogAudio = new File(
+                parent.sketchPath("ffmpeg-audio.txt"));
         processBuilder.redirectOutput(ffmpegOutputLogAudio);
 
         try {
@@ -667,6 +758,10 @@ public class VideoExport {
      */
     public void dispose() {
         endMovie();
+    }
+
+    private static JSONArray toJSONArray(String s) {
+        return new JSONArray(new StringList(s.split(" ")));
     }
 
     protected void err(String msg) {
