@@ -38,13 +38,6 @@ void draw() {
 void keyPressed() {
   if (key == 'q' || key == 'x') {
     noLoop();
-    try {
-      Thread.sleep(100L);  // pause for 10th of a second;
-      // allows last movie frame to be written
-      // without hitting an NPE
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
     videoExport.endMovie();
     exit();
   }
