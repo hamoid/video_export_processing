@@ -57,10 +57,12 @@ public class VideoExport {
     public final static String VERSION = "##library.prettyVersion##";
     protected final static String SETTINGS_FFMPEG_PATH = "ffmpeg_path";
     protected final static String SETTINGS_CMD_ENCODE_VIDEO = "encode_video";
-    protected final static String SETTINGS_CMD_ENCODE_AUDIO = "encode_audio";
+    protected final static String SETTINGS_CMD_ENCODE_AUDIO = "encode_audio"; 
+    protected final static String SETTINGS_CMD_ENCODE_VIDEO_AUDIO_URL = "encode_video_audio_url";
     protected final static String FFMPEG_PATH_UNSET = "ffmpeg_path_unset";
     protected static JSONArray CMD_ENCODE_AUDIO_DEFAULT;
     protected static JSONArray CMD_ENCODE_VIDEO_DEFAULT;
+    protected static JSONArray CMD_ENCODE_VIDEO_AUDIO_URL_DEFAULT;
     protected final String ffmpegMetadataComment = "Made with " +
             "Video Export for Processing - https://git.io/vAXLk";
     protected ProcessBuilder processBuilder;
@@ -71,6 +73,7 @@ public class VideoExport {
     protected boolean saveDebugInfo = true;
     protected String outputFilePath;
     protected String audioFilePath;
+    protected String audioUrl = null;
     protected PImage img;
     protected PApplet parent;
     protected int ffmpegCrfQuality;
@@ -158,6 +161,26 @@ public class VideoExport {
                         "[output]"                        // output file
                 }));
 
+        CMD_ENCODE_VIDEO_AUDIO_URL_DEFAULT = new JSONArray(new StringList(
+                new String[]{
+                        "[ffmpeg]",                       // ffmpeg executable
+                        "-y",                             // overwrite old file
+                        "-f", "rawvideo",                 // format rgb raw
+                        "-vcodec", "rawvideo",            // in codec rgb raw
+                        "-s", "[width]x[height]",         // size
+                        "-pix_fmt", "rgb24",              // pix format rgb24
+                        "-r", "[fps]",                    // frame rate
+                        "-i", "-",                        // pipe input
+                        "-i", "[url]",                    // to get audio URL
+                        "-acodec", "aac",                 // audio codec
+                        "-vcodec", "h264",                // out codec h264
+                        "-pix_fmt", "yuv420p",            // color space yuv420p
+                        "-crf", "[crf]",                  // quality
+                        "-strict", "experimental",        // audio url won't work without this 
+                        "-metadata", "comment=[comment]", // comment
+                        "[output]"                        // output file
+                }));        
+        
         CMD_ENCODE_AUDIO_DEFAULT = new JSONArray(new StringList(
                 new String[]{
                         "[ffmpeg]",                       // ffmpeg executable
@@ -206,12 +229,20 @@ public class VideoExport {
                     settings.setJSONArray(SETTINGS_CMD_ENCODE_AUDIO,
                             toJSONArray((String) o));
                 }
+                // If String, make it JSONArray
+                o = settings.get(SETTINGS_CMD_ENCODE_VIDEO_AUDIO_URL);
+                if(o instanceof String) {
+                    settings.setJSONArray(SETTINGS_CMD_ENCODE_VIDEO_AUDIO_URL,
+                            toJSONArray((String) o));
+                }
             } else {
                 settings = new JSONObject();
                 settings.setJSONArray(SETTINGS_CMD_ENCODE_VIDEO,
                         CMD_ENCODE_VIDEO_DEFAULT);
                 settings.setJSONArray(SETTINGS_CMD_ENCODE_AUDIO,
                         CMD_ENCODE_AUDIO_DEFAULT);
+                settings.setJSONArray(SETTINGS_CMD_ENCODE_VIDEO_AUDIO_URL,
+                        CMD_ENCODE_VIDEO_AUDIO_URL_DEFAULT);
             }
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -244,8 +275,32 @@ public class VideoExport {
         outputFilePath = parent.sketchPath(newMovieFileName);
     }
 
+    /**
+     * Allow setting a url for audio file name to be used as input.
+     *
+     * @param audioFileName
+     *            String file name to be used as audio track for the movie.
+     */
     public void setAudioFileName(final String audioFileName) {
+        if (audioUrl != null) {
+            System.err.println("Can't setAudioFileName() after setAudioUrl()!");
+            return;
+        }
         audioFilePath = parent.dataPath(audioFileName);
+    }
+    
+    /**
+     * Allow setting a url for audio input.
+     *
+     * @param audioUrl
+     *            String with url to be used as audio track for the movie.
+     */
+    public void setAudioUrl(final String audioUrl) {
+        if (audioFilePath != null) {
+            System.err.println("Can't setAudioUrl() after setAudioFileName()!");
+            return;
+        }
+        this.audioUrl = audioUrl;
     }
 
     /**
@@ -543,8 +598,14 @@ public class VideoExport {
 
         // Get command as JSONArray
         JSONArray cmd;
+        // use video cmd settings based on whether an input audio url is used, or
+        // if audio we be added possibly from a file in attachSound()
+        String cmdSelection = SETTINGS_CMD_ENCODE_VIDEO;
+        if (audioUrl != null) {
+        	cmdSelection = SETTINGS_CMD_ENCODE_VIDEO_AUDIO_URL;
+        }
         try {
-            cmd = settings.getJSONArray(SETTINGS_CMD_ENCODE_VIDEO);
+            cmd = settings.getJSONArray(cmdSelection);
         } catch (RuntimeException e) {
             cmd = CMD_ENCODE_VIDEO_DEFAULT;
         }
@@ -561,6 +622,7 @@ public class VideoExport {
                         .replace("[width]", "" + img.pixelWidth)
                         .replace("[height]", "" + img.pixelHeight)
                         .replace("[fps]", "" + ffmpegFrameRate)
+                        .replace("[url]", "" + audioUrl)
                         .replace("[crf]", "" + ffmpegCrfQuality)
                         .replace("[comment]", ffmpegMetadataComment)
                         .replace("[output]", outputFilePath);
