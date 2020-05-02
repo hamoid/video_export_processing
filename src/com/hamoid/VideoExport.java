@@ -27,26 +27,20 @@
 
 package com.hamoid;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.URISyntaxException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.swing.JOptionPane;
-
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.Wincon;
-
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PImage;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
 import processing.data.StringList;
+
+import javax.swing.*;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @example basic
@@ -88,8 +82,7 @@ public class VideoExport {
      * <p>
      * Using a default movie file name (processing-movie.mp4).
      *
-     * @param parent
-     *            Pass "this" when constructing a VideoExport instance
+     * @param parent Pass "this" when constructing a VideoExport instance
      */
     public VideoExport(PApplet parent) {
         this(parent, "processing-movie.mp4", parent.g);
@@ -98,11 +91,9 @@ public class VideoExport {
     /**
      * Constructor that allows specifying a movie file name.
      *
-     * @param parent
-     *            Parent PApplet, normally "this" when called from setup()
-     * @param outputFileName
-     *            The name of the video file to produce, for instance
-     *            "beauty.mp4"
+     * @param parent         Parent PApplet, normally "this" when called from setup()
+     * @param outputFileName The name of the video file to produce, for instance
+     *                       "beauty.mp4"
      * @example basic
      */
     public VideoExport(PApplet parent, String outputFileName) {
@@ -112,18 +103,15 @@ public class VideoExport {
     /**
      * Constructor that allows to set a PImage to export as video (advanced)
      *
-     * @param parent
-     *            Parent PApplet, normally "this" when called from setup()
-     * @param outputFileName
-     *            The name of the video file to produce, for instance
-     *            "beauty.mp4"
-     * @param img
-     *            PImage object to export as video (can be a PGraphics, Movie,
-     *            Capture...)
+     * @param parent         Parent PApplet, normally "this" when called from setup()
+     * @param outputFileName The name of the video file to produce, for instance
+     *                       "beauty.mp4"
+     * @param img            PImage object to export as video (can be a PGraphics, Movie,
+     *                       Capture...)
      * @example usingPGraphics
      */
     public VideoExport(PApplet parent, final String outputFileName,
-            PImage img) {
+                       PImage img) {
 
         parent.registerMethod("dispose", this);
 
@@ -184,7 +172,7 @@ public class VideoExport {
         try {
             File thisJar = new File(VideoExport.class.getProtectionDomain()
                     .getCodeSource().getLocation().toURI().getPath())
-                            .getParentFile().getParentFile();
+                    .getParentFile().getParentFile();
             settingsPath = thisJar.getAbsolutePath() + File.separator
                     + "settings.json";
             File settingsFile = new File(settingsPath);
@@ -196,13 +184,13 @@ public class VideoExport {
 
                 // If String, make it JSONArray
                 o = settings.get(SETTINGS_CMD_ENCODE_VIDEO);
-                if(o instanceof String) {
+                if (o instanceof String) {
                     settings.setJSONArray(SETTINGS_CMD_ENCODE_VIDEO,
                             toJSONArray((String) o));
                 }
                 // If String, make it JSONArray
                 o = settings.get(SETTINGS_CMD_ENCODE_AUDIO);
-                if(o instanceof String) {
+                if (o instanceof String) {
                     settings.setJSONArray(SETTINGS_CMD_ENCODE_AUDIO,
                             toJSONArray((String) o));
                 }
@@ -233,12 +221,15 @@ public class VideoExport {
         return VERSION;
     }
 
+    private static JSONArray toJSONArray(String s) {
+        return new JSONArray(new StringList(s.split(" ")));
+    }
+
     /**
      * Allow setting a new movie name, in case we want to export several movies,
      * one after the other.
      *
-     * @param newMovieFileName
-     *            String with file name of the new movie to create
+     * @param newMovieFileName String with file name of the new movie to create
      */
     public void setMovieFileName(final String newMovieFileName) {
         outputFilePath = parent.sketchPath(newMovieFileName);
@@ -251,8 +242,7 @@ public class VideoExport {
     /**
      * Set the PImage element. Advanced use only. Optional.
      *
-     * @param img
-     *            A PImage object. Probably used for off-screen exporting..
+     * @param img A PImage object. Probably used for off-screen exporting..
      */
     public void setGraphics(PImage img) {
         this.img = img;
@@ -261,14 +251,12 @@ public class VideoExport {
     /**
      * Set the quality of the produced video file. Optional.
      *
-     * @param crf
-     *            Video quality. A value between 0 (high compression) and 100
-     *            (high quality, lossless). Default is 70.
-     * @param audioBitRate
-     *            Audio quality (bit rate in kbps).
-     *            128 is the default. 192 is very good.
-     *            More than 256 does not make sense.
-     *            Higher numbers produce heavier files.
+     * @param crf          Video quality. A value between 0 (high compression) and 100
+     *                     (high quality, lossless). Default is 70.
+     * @param audioBitRate Audio quality (bit rate in kbps).
+     *                     128 is the default. 192 is very good.
+     *                     More than 256 does not make sense.
+     *                     Higher numbers produce heavier files.
      */
     public void setQuality(int crf, int audioBitRate) {
         if (ffmpeg != null) {
@@ -287,10 +275,9 @@ public class VideoExport {
     /**
      * Set the frame rate of the produced video file. Optional.
      *
-     * @param frameRate
-     *            The frame rate at which the resulting video file should be
-     *            played. The default is 30, which is the recommended for online
-     *            video.
+     * @param frameRate The frame rate at which the resulting video file should be
+     *                  played. The default is 30, which is the recommended for online
+     *                  video.
      */
     public void setFrameRate(float frameRate) {
         if (ffmpeg != null) {
@@ -306,8 +293,7 @@ public class VideoExport {
      * Useful to avoid calling it twice, which might hurt the
      * performance a bit. Optional.
      *
-     * @param doLoadPixels
-     *            Set to false to disable the internal loadPixels() call.
+     * @param doLoadPixels Set to false to disable the internal loadPixels() call.
      */
     public void setLoadPixels(boolean doLoadPixels) {
         loadPixelsEnabled = doLoadPixels;
@@ -321,9 +307,8 @@ public class VideoExport {
      * call videoExport.setDebugging(false) to avoid creating unnecessary
      * files. Optional.
      *
-     * @param saveDebugFile
-     *            Set to false to disable saving the ffmpeg output in a text
-     *            file
+     * @param saveDebugFile Set to false to disable saving the ffmpeg output in a text
+     *                      file
      */
     public void setDebugging(boolean saveDebugFile) {
         saveDebugInfo = saveDebugFile;
@@ -405,8 +390,8 @@ public class VideoExport {
         String ffmpeg_path = getFfmpegPath();
         // If it did not exist, try to guess where it is
         if (ffmpeg_path.equals(FFMPEG_PATH_UNSET)) {
-            String[] guess_paths = { "/usr/local/bin/ffmpeg",
-                    "/usr/bin/ffmpeg" };
+            String[] guess_paths = {"/usr/local/bin/ffmpeg",
+                    "/usr/bin/ffmpeg"};
             for (String guess_path : guess_paths) {
                 if ((new File(guess_path)).isFile()) {
                     ffmpeg_path = guess_path;
@@ -433,11 +418,13 @@ public class VideoExport {
                             + "a free command line tool.\n\n"
                             + "If you don't have ffmpeg yet:\n\n"
                             + "-- Windows / Mac --\n"
-                            + "1. Download a static build from http://ffmpeg.org\n"
+                            +
+                            "1. Download a static build from http://ffmpeg.org\n"
                             + "2. Unzip it\n\n" + "-- Linux --\n"
                             + "1. Install ffmpeg using your package manager\n\n"
                             + "-- When you already have ffmpeg --\n"
-                            + "Click OK and select the ffmpeg or ffmpeg.exe program");
+                            +
+                            "Click OK and select the ffmpeg or ffmpeg.exe program");
 
             // Show "select file" dialog
             parent.selectInput(
@@ -483,6 +470,7 @@ public class VideoExport {
     /**
      * Call this method if you know the path to ffmpeg on your computer
      * (advanced).
+     *
      * @param path
      */
     public void setFfmpegPath(String path) {
@@ -505,14 +493,14 @@ public class VideoExport {
      * Called internally by the file selector when the user chooses
      * the location of ffmpeg on the disk.
      *
-     * @param selection
-     *            (internal)
+     * @param selection (internal)
      */
     public void onFfmpegSelected(File selection) {
         if (selection == null) {
             System.err.println(
                     "The VideoExport library requires ffmpeg but it was not found. "
-                            + "Please try again or read the library documentation.");
+                            +
+                            "Please try again or read the library documentation.");
         } else {
             String ffmpeg_path = selection.getAbsolutePath();
             System.out.println("ffmpeg selected at " + ffmpeg_path);
@@ -541,33 +529,10 @@ public class VideoExport {
                     + img.pixelHeight);
         }
 
-        // Get command as JSONArray
-        JSONArray cmd;
-        try {
-            cmd = settings.getJSONArray(SETTINGS_CMD_ENCODE_VIDEO);
-        } catch (RuntimeException e) {
-            cmd = CMD_ENCODE_VIDEO_DEFAULT;
-        }
-        // JSONArray -> String[]
-        String[] cmdArgs = cmd.getStringArray();
-        // Replace variables. I first split, then replace (instead of
-        // replace, then split) because the replacement may contain spaces.
-        // For instance the comment would be split into parts and
-        // break the command.
-        for (int i = 0; i < cmdArgs.length; i++) {
-            if (cmdArgs[i].contains("[")) {
-                cmdArgs[i] = cmdArgs[i]
-                        .replace("[ffmpeg]", executable)
-                        .replace("[width]", "" + img.pixelWidth)
-                        .replace("[height]", "" + img.pixelHeight)
-                        .replace("[fps]", "" + ffmpegFrameRate)
-                        .replace("[crf]", "" + ffmpegCrfQuality)
-                        .replace("[comment]", ffmpegMetadataComment)
-                        .replace("[output]", outputFilePath);
-            }
+        String[] args = getProcessArguments(executable,
+                SETTINGS_CMD_ENCODE_VIDEO, CMD_ENCODE_VIDEO_DEFAULT);
 
-        }
-        processBuilder = new ProcessBuilder(cmdArgs);
+        processBuilder = new ProcessBuilder(args);
         processBuilder.redirectErrorStream(true);
         ffmpegOutputLog = new File(parent.sketchPath("ffmpeg.txt"));
         processBuilder.redirectOutput(ffmpegOutputLog);
@@ -582,6 +547,38 @@ public class VideoExport {
         ffmpeg = process.getOutputStream();
         ffmpegFound = true;
         frameCount = 0;
+    }
+
+    private String[] getProcessArguments(String executable,
+                                         String jsonKey,
+                                         JSONArray defaultCMD) {
+        // Get command as JSONArray
+        JSONArray cmd;
+        try {
+            cmd = settings.getJSONArray(jsonKey);
+        } catch (RuntimeException e) {
+            cmd = defaultCMD;
+        }
+
+        // JSONArray -> String[]
+        String[] args = cmd.getStringArray();
+        // Replace variables. I first split, then replace (instead of
+        // replace, then split) because the replacement may contain spaces.
+        // For instance the comment would be split into parts and
+        // break the command.
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].contains("[")) {
+                args[i] = args[i]
+                        .replace("[ffmpeg]", executable)
+                        .replace("[width]", "" + img.pixelWidth)
+                        .replace("[height]", "" + img.pixelHeight)
+                        .replace("[fps]", "" + ffmpegFrameRate)
+                        .replace("[crf]", "" + ffmpegCrfQuality)
+                        .replace("[comment]", ffmpegMetadataComment)
+                        .replace("[output]", outputFilePath);
+            }
+        }
+        return args;
     }
 
     public void startMovie() {
@@ -610,29 +607,7 @@ public class VideoExport {
                 // CTRL+C keys to ffmpeg if using Windows.
 
                 if (PApplet.platform == PConstants.WINDOWS) {
-                    // Launch tasklist
-                    ProcessBuilder ps = new ProcessBuilder("tasklist");
-                    Process pr = ps.start();
-
-                    // Get all processes from tasklist
-                    BufferedReader allProcesses = new BufferedReader(
-                            new InputStreamReader(pr.getInputStream()));
-                    // Regex to find the word "ffmpeg.exe"
-                    Pattern isFfmpeg = Pattern
-                            .compile("ffmpeg\\.exe.*?([0-9]+)");
-                    String processDetails;
-                    // Iterate over all processes
-                    while ((processDetails = allProcesses.readLine()) != null) {
-                        Matcher m = isFfmpeg.matcher(processDetails);
-                        // Check if this process is ffmpeg.exe
-                        if (m.find()) {
-                            // If it is, send it CTRL+C to stop it
-                            Wincon wincon = Kernel32.INSTANCE;
-                            wincon.GenerateConsoleCtrlEvent(Wincon.CTRL_C_EVENT,
-                                    Integer.parseInt(m.group(1)));
-                            break;
-                        }
-                    }
+                    stopFfmpegOnWindows();
                 } else {
                     // In Linux and Mac tell the process to end
                     process.destroy();
@@ -659,6 +634,32 @@ public class VideoExport {
             }
             processBuilder = null;
             process = null;
+        }
+    }
+
+    private void stopFfmpegOnWindows() throws IOException {
+        // Launch tasklist
+        ProcessBuilder ps = new ProcessBuilder("tasklist");
+        Process pr = ps.start();
+
+        // Get all processes from tasklist
+        BufferedReader allProcesses = new BufferedReader(
+                new InputStreamReader(pr.getInputStream()));
+        // Regex to find the word "ffmpeg.exe"
+        Pattern isFfmpeg = Pattern
+                .compile("ffmpeg\\.exe.*?([0-9]+)");
+        String processDetails;
+        // Iterate over all processes
+        while ((processDetails = allProcesses.readLine()) != null) {
+            Matcher m = isFfmpeg.matcher(processDetails);
+            // Check if this process is ffmpeg.exe
+            if (m.find()) {
+                // If it is, send it CTRL+C to stop it
+                Wincon wincon = Kernel32.INSTANCE;
+                wincon.GenerateConsoleCtrlEvent(Wincon.CTRL_C_EVENT,
+                        Integer.parseInt(m.group(1)));
+                break;
+            }
         }
     }
 
@@ -758,10 +759,6 @@ public class VideoExport {
      */
     public void dispose() {
         endMovie();
-    }
-
-    private static JSONArray toJSONArray(String s) {
-        return new JSONArray(new StringList(s.split(" ")));
     }
 
     protected void err(String msg) {
