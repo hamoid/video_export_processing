@@ -5,8 +5,7 @@ import ddf.minim.spi.*;
 
 VideoExport videoExport;
 
-//String audioFilePath = "jingle.mp3";
-String audioFilePath = "C:\\Users\\busybox\\Desktop\\sounds\\k_o_m\\TRACKS\\4tune.wav";
+String audioFilePath = "jingle.mp3";
 
 String SEP = "|";
 float movieFPS = 30;
@@ -21,7 +20,7 @@ BufferedReader reader;
    is tricky. It gets easily out of sync.
     
    One approach, used in this example, is:
-   forward
+   
    Pass 1. Analyze the sound in a Processing sketch 
            and output a text file including the FFT 
            analysis data.
@@ -136,9 +135,6 @@ void draw() {
   }
 }
 
-
-
-int forwardCount=0;
 // Minim based audio FFT to data text file conversion.
 // Non real-time, so you don't wait 5 minutes for a 5 minute song :)
 // You can look at the produced txt file in the data folder
@@ -149,8 +145,7 @@ void audioToTextFile(String fileName) {
   Minim minim = new Minim(this);
   output = createWriter(dataPath(fileName + ".txt"));
 
-  AudioSample track = minim.loadSample(fileName, 1024);
-  //AudioSample track = minim.loadSample(fileName, 2048);
+  AudioSample track = minim.loadSample(fileName, 2048);
 
   int fftSize = 1024;
   float sampleRate = track.sampleRate();
@@ -164,16 +159,11 @@ void audioToTextFile(String fileName) {
   FFT fftL = new FFT(fftSize, sampleRate);
   FFT fftR = new FFT(fftSize, sampleRate);
 
-  //fftL.logAverages(22, 3);
-  //fftR.logAverages(22, 3);
-
-  fftL.linAverages(513);
-  fftR.linAverages(513);
+  fftL.logAverages(22, 3);
+  fftR.logAverages(22, 3);
 
   int totalChunks = (samplesL.length / fftSize) + 1;
   int fftSlices = fftL.avgSize();
-  print("fftSlices: ",fftSlices,"\n");
-
 
   for (int ci = 0; ci < totalChunks; ++ci) {
     int chunkStartIndex = ci * fftSize;   
@@ -187,9 +177,7 @@ void audioToTextFile(String fileName) {
     }
 
     fftL.forward( fftSamplesL );
-    forwardCount++;
-    //print("forwardCount: ",forwardCount,"\n");
-    fftR.forward( fftSamplesL );
+    fftR.forward( fftSamplesR );
 
     // The format of the saved txt file.
     // The file contains many rows. Each row looks like this:
