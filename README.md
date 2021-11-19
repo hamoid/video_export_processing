@@ -2,6 +2,13 @@
 
 Written in Kotlin and uses Gradle as build system.
 
+## Using the library
+
+I placed a copy of the library to test under the `p5Library` folder so you don't
+need to build it yourself.
+
+## Bulding the library
+
 The project can be opened in IntelliJ Idea community edition.
 
 Wait for indexing (takes a minute).
