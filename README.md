@@ -2,6 +2,9 @@
 
 Written in Kotlin and uses Gradle as build system.
 
+Note: Not throroughly tested nor polished. May break. Use with a fire
+extinguisher near by.
+
 ## Using the library
 
 I placed a copy of the library to test under the `p5Library` folder so you don't
