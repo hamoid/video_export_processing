@@ -1,9 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="95f332ec-54a3-4b08-8669-cbca6fe5878e" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/p5test/p5test.pde" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/videoExport/Ffmpeg.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/videoExport/Settings.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/videoExport/VideoExport.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/kotlin/SimpleExportJ.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/kotlin/videoExport/SimpleExport.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/kotlin/videoExport/VideoExportTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ant.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/hamoid/VideoExport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/hamoid/VideoExport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/VideoExport.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/README" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/basic/basic.pde" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/interactive/interactive.pde" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/internetVideo/internetVideo.pde" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/multipleMovies/multipleMovies.pde" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/options/options.pde" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/usingPGraphics/usingPGraphics.pde" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/webcamSaving/webcamSaving.pde" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/withAudio/data/test-sound.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/withAudio/withAudio.pde" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/withAudioViz/data/jingle.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/withAudioViz/withAudioViz.pde" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/zCustomCommand/zCustomCommand.pde" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/README" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/jna-platform.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/jna.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/license.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/build.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/build.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/code/ExampleTaglet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/code/ExampleTaglet.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/code/ant-contrib-1.0b3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/code/doc.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/library.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/stylesheet.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/hamoid/VideoExport.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/stylesheet.css" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,6 +61,53 @@
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="videoExport" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="videoExport" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="videoExport" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="documentation" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="videoExport" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="shadow" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="videoExport" type="f1a62948:ProjectNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -80,8 +176,10 @@
     <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
     <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
     <property name="GenerateAntBuildDialog.outputFileNameProperty" value="videoexport" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="extract.method.default.visibility" value="private" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../P5Helper" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -182,6 +280,27 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="VideoExport [shadowJar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="shadowJar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
@@ -191,34 +310,6 @@
     </configuration>
     <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
       <option name="filePath" />
-      <option name="vmParameters" />
-      <option name="alternativeJrePath" />
-      <option name="programParameters" />
-      <option name="passParentEnvs" value="true" />
-      <option name="workingDirectory" />
-      <option name="isAlternativeJrePathEnabled" value="false" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="WORKING_DIRECTORY" />
-      <module name="" />
-      <option name="filePath" />
-      <option name="vmParameters" />
-      <option name="alternativeJrePath" />
-      <option name="programParameters" />
-      <option name="passParentEnvs" value="true" />
-      <option name="workingDirectory" />
-      <option name="isAlternativeJrePathEnabled" value="false" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="WORKING_DIRECTORY" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -232,7 +323,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.VideoExport [shadowJar]" />
+      </list>
+    </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -280,35 +377,5 @@
       <screen x="0" y="0" width="1920" height="1200" />
     </state>
     <state x="692" y="330" width="526" height="456" key="extract.method.dialog/0.0.1920.1200@0.0.1920.1200" timestamp="1588414023967" />
-  </component>
-  <component name="antWorkspaceConfiguration">
-    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
-    <option name="FILTER_TARGETS" value="false" />
-    <buildFile url="file://$PROJECT_DIR$/resources/build.xml">
-      <targetFilters>
-        <filter targetName="init" isVisible="false" />
-        <filter targetName="library.init" isVisible="false" />
-        <filter targetName="library.run" isVisible="false" />
-        <filter targetName="generate.libprops" isVisible="false" />
-        <filter targetName="copyToSketchbook" isVisible="false" />
-        <filter targetName="compile" isVisible="false" />
-        <filter targetName="generate.jar" isVisible="false" />
-        <filter targetName="generate.structure" isVisible="false" />
-        <filter targetName="generate.source" isVisible="false" />
-        <filter targetName="generate.source.win" isVisible="false" />
-        <filter targetName="generate.source.nix" isVisible="false" />
-        <filter targetName="generate.distribution" isVisible="false" />
-        <filter targetName="generate.javadoc" isVisible="false" />
-        <filter targetName="generate.web" isVisible="false" />
-        <filter targetName="parse.file" isVisible="false" />
-        <filter targetName="generate.install.library" isVisible="false" />
-        <filter targetName="generate.zip" isVisible="false" />
-        <filter targetName="processExamples" isVisible="false" />
-        <filter targetName="addExamples" isVisible="false" />
-        <filter targetName="clean" isVisible="false" />
-      </targetFilters>
-      <verbose value="false" />
-      <expanded value="true" />
-    </buildFile>
   </component>
 </project>
