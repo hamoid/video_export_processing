@@ -14,9 +14,9 @@ This should create the .jar library placing it into
 
     build/libs/videoExport-all.jar
 
-It needs to be copied into
+It needs to be copied into your Processing libraries folder, something like
 
-libraries/videoExport/library/videoExport.jar
+    libraries/videoExport/library/videoExport.jar
 
 
 
@@ -29,6 +29,9 @@ Also by running the
 one can create the docs, that end up in 
 
     build/dokka/html/
+
+
+The previous version of the library uses Ant to build, an older build system.
 
 
 I tested the library in Processing 3 and 4 and it does seem to run, and it can
