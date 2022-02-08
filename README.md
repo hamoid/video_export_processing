@@ -1,3 +1,8 @@
+ℹ Notes:
+
+- I'm looking for someone to **maintain** this library. Get in contact if you are using it and want to take over.
+- There's a newer **rewrite** of the library using Kotlin and Gradle. Download it from https://github.com/hamoid/video_export_processing/tree/kotlinGradle
+
 # Video Export for Processing
 
 This library interfaces with FFmpeg and makes it easy to export video files out
