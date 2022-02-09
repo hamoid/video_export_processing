@@ -8,7 +8,20 @@ extinguisher near by.
 ## Using the library
 
 I placed a copy of the library to test under the `p5Library` folder so you don't
-need to build it yourself.
+need to build it yourself. To install it:
+
+- Open the Preferences in Processind and at the top note down the `Sketchbook
+  location`.
+- Close Processing
+- Make sure there's a `libraries` folder inside the `Sketchbook location`.
+  Create it if it's not there.
+- Click the green `Code` button in [this page](https://github.com/hamoid/video_export_processing/tree/kotlinGradle) and choose `Download ZIP`.
+- From inside the zip file, drag the folder *inside* `p5Library` (the folder called
+  `videoExport`) into the `libraries` folder, so you have
+  `libraries/videoExport/settings.json` and
+  `libraries/videoExport/library/videoExport.jar`
+- Open Processing and run [this example](https://github.com/hamoid/video_export_processing/blob/kotlinGradle/p5test/p5test.pde) to see if it works.
+- In the [master branch](https://github.com/hamoid/video_export_processing/tree/master/examples) there's a bunch of examples but I haven't checked yet if they need to be made compatible with this newer version of the video export library. If someone can try those examples and give me feedback it would be very useful.
 
 ## Bulding the library
 
