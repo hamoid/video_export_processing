@@ -20,7 +20,7 @@ need to build it yourself. To install it:
   `videoExport`) into the `libraries` folder, so you have
   `libraries/videoExport/settings.json` and
   `libraries/videoExport/library/videoExport.jar`
-- Open Processing and run [this example](https://github.com/hamoid/video_export_processing/blob/kotlinGradle/p5test/p5test.pde) to see if it works.
+- Open Processing and run [this example](https://raw.githubusercontent.com/hamoid/video_export_processing/kotlinGradle/p5test/p5test.pde) to see if it works.
 - In the [master branch](https://github.com/hamoid/video_export_processing/tree/master/examples) there's a bunch of examples but I haven't checked yet if they need to be made compatible with this newer version of the video export library. If someone can try those examples and give me feedback it would be very useful.
 
 ## Bulding the library
