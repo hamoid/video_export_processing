@@ -10,18 +10,16 @@ extinguisher near by.
 I placed a copy of the library to test under the `p5Library` folder so you don't
 need to build it yourself. To install it:
 
-- Open the Preferences in Processind and at the top note down the `Sketchbook
-  location`.
+- Open the Preferences in Processing and at the top note down the `Sketchbook location`.
 - Close Processing
 - Make sure there's a `libraries` folder inside the `Sketchbook location`.
   Create it if it's not there.
 - Click the green `Code` button in [this page](https://github.com/hamoid/video_export_processing/tree/kotlinGradle) and choose `Download ZIP`.
-- From inside the zip file, drag the folder *inside* `p5Library` (the folder called
-  `videoExport`) into the `libraries` folder, so you have
+- From inside the zip file, drag the folder `p5Library/videoExport` into the `libraries` folder, so you end up with
   `libraries/videoExport/settings.json` and
   `libraries/videoExport/library/videoExport.jar`
-- Open Processing and run [this example](https://raw.githubusercontent.com/hamoid/video_export_processing/kotlinGradle/p5test/p5test.pde) to see if it works.
-- In the [master branch](https://github.com/hamoid/video_export_processing/tree/master/examples) there's a bunch of examples but I haven't checked yet if they need to be made compatible with this newer version of the video export library. If someone can try those examples and give me feedback it would be very useful.
+- Launch Processing and open the Examples menu.
+- In the examples window, go to Contributed Libraries > videoExport and try to run the `basic` example.
 
 ## Bulding the library
 
@@ -33,17 +31,8 @@ On the Gradle tab on the right side of the IDE, double click on:
 
     videoExport > Tasks > shadow > shadowJar
 
-This should create the .jar library placing it into
+This should update the `p5library` folder which you can use as described under **Using the library**.
 
-    build/libs/videoExport-all.jar
-
-It needs to be copied into your Processing libraries folder, something like
-
-    libraries/videoExport/library/videoExport.jar
-
-
-
-This copying should be automated but I didn't have time to do it.
 
 Also by running the 
 
@@ -64,4 +53,6 @@ behind this was to be able to compose videos in a video editor (as layers).
 
 Good luck :)
 
+## To do
 
+- https://medium.com/@shanemyrick/publishing-to-github-packages-with-gradle-and-github-actions-4ad842634c4e

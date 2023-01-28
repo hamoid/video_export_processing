@@ -4,10 +4,36 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="95f332ec-54a3-4b08-8669-cbca6fe5878e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+    <list default="true" id="95f332ec-54a3-4b08-8669-cbca6fe5878e" name="Default" comment="Update gradle, add .endMovie(), change package to com.hamoid&#10;&#10;(as it used to be)">
+      <change afterPath="$PROJECT_DIR$/.idea/GitLink.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/p5library/videoExport/examples/basic/basic.pde" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/p5library/videoExport/examples/interactive/interactive.pde" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/p5library/videoExport/examples/internetVideo/internetVideo.pde" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/p5library/videoExport/examples/multipleMovies/multipleMovies.pde" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/p5library/videoExport/examples/options/options.pde" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/p5library/videoExport/examples/usingPGraphics/usingPGraphics.pde" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/p5library/videoExport/examples/webcamSaving/webcamSaving.pde" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/p5library/videoExport/examples/withAudio/data/test-sound.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/p5library/videoExport/examples/withAudio/withAudio.pde" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/p5library/videoExport/examples/withAudioUrl/data/withAudioUrl.pde" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/p5library/videoExport/examples/withAudioViz/data/jingle.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/p5library/videoExport/examples/withAudioViz/withAudioViz.pde" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/p5library/videoExport/examples/zCustomCommand/zCustomCommand.pde" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/p5library/videoExport/library/videoExport.jar" beforeDir="false" afterPath="$PROJECT_DIR$/p5library/videoExport/library/videoExport.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/videoExport/Ffmpeg.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/hamoid/Ffmpeg.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/videoExport/Settings.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/hamoid/Settings.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/videoExport/VideoExport.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/hamoid/VideoExport.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/SimpleExportJ.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/SimpleExportJ.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/videoExport/SimpleExport.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/com/hamoid/SimpleExport.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/videoExport/VideoExportTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/com/hamoid/VideoExportTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,6 +122,9 @@
   <component name="MacroExpansionManager">
     <option name="directoryName" value="m4b3zloh" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectId" id="1bLZ3W6WzCpBvaENRtAMvsJvw0x" />
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -129,49 +158,24 @@
     <option name="showLibraryContents" value="true" />
     <option name="sortByType" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="GenerateAntBuildDialog.backupFiles" value="true" />
-    <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
-    <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
-    <property name="GenerateAntBuildDialog.outputFileNameProperty" value="videoexport" />
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="extract.method.default.visibility" value="private" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Project" />
-    <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "last_opened_file_path": "/home/funpro/workspace/processing_library_template",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.43148148"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/p5library/videoExport" />
+      <recent name="$PROJECT_DIR$/p5library/videoExport/library" />
+    </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android App">
-      <module name="" />
-      <option name="DEPLOY" value="true" />
-      <option name="ARTIFACT_NAME" value="" />
-      <option name="PM_INSTALL_OPTIONS" value="" />
-      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
-      <option name="MODE" value="default_activity" />
-      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
-      <option name="PREFERRED_AVD" value="" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
-      <option name="FORCE_STOP_RUNNING_APP" value="true" />
-      <option name="DEBUGGER_TYPE" value="Java" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
-      <option name="PREFERRED_AVD" value="" />
-      <Java />
-      <Profilers>
-        <option name="ENABLE_ADVANCED_PROFILING" value="true" />
-        <option name="GAPID_ENABLED" value="false" />
-        <option name="GAPID_DISABLE_PCS" value="false" />
-        <option name="SUPPORT_LIB_ENABLED" value="true" />
-        <option name="INSTRUMENTATION_ENABLED" value="true" />
-      </Profilers>
-      <option name="DEEP_LINK" value="" />
-      <option name="ACTIVITY_CLASS" value="" />
-      <method />
-    </configuration>
     <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
       <module name="" />
       <option name="DEPLOY" value="true" />
@@ -328,5 +332,9 @@
     <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
       <collection />
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Update gradle, add .endMovie(), change package to com.hamoid&#10;&#10;(as it used to be)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update gradle, add .endMovie(), change package to com.hamoid&#10;&#10;(as it used to be)" />
   </component>
 </project>

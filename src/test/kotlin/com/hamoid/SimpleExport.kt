@@ -1,4 +1,4 @@
-package videoExport
+package com.hamoid
 
 import processing.core.PApplet
 import processing.core.PGraphics
@@ -32,12 +32,12 @@ class SimpleExport : PApplet() {
         background(255)
         image(pg, 0f, 0f)
 
-        videoExport.saveFrame();
+        videoExport.saveFrame()
     }
 
     override fun keyPressed() {
         if(key == 'q') {
-            videoExport.dispose()
+            videoExport.endMovie()
             exit()
         }
     }

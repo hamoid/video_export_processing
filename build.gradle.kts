@@ -29,10 +29,10 @@ dependencies {
 
     //compileOnly("org.processing:core:3.3.7")
     //compileOnly("org.processing:pde:3.3.7")
-    compileOnly("com.github.micycle1:processing-core-4:4.0.3")
+    compileOnly("com.github.micycle1:processing-core-4:4.0.1")
 
-    compileOnly("net.java.dev.jna:jna:5.7.0")
-    compileOnly("net.java.dev.jna:jna-platform:5.7.0")
+    compileOnly("net.java.dev.jna:jna:5.12.1")
+    compileOnly("net.java.dev.jna:jna-platform:5.12.1")
 
     // Test
     testImplementation("org.jetbrains.kotlin:kotlin-test")
@@ -40,7 +40,7 @@ dependencies {
     testImplementation("org.processing:core:3.3.7")
 
     // Documentation
-    dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.5.0")
+    dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.7.10")
 
     // Exported to consumers
     //api("org.apache.commons:commons-math3:3.6.1")
@@ -55,12 +55,15 @@ tasks.jar {
             )
         )
     }
-
+}
+tasks.shadowJar {
     doLast {
         copy {
             from(layout.buildDirectory.dir("libs/${rootProject.name}-all.jar"))
-            into("/home/funpro/Desktop/edu/src/processing/libraries" +
-                    "/videoExport/library/")
+            into(layout.projectDirectory.dir("p5library/videoExport/library/"))
+            rename {
+                it.replace("-all", "")
+            }
         }
     }
 }

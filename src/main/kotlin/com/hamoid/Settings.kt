@@ -1,4 +1,4 @@
-package videoExport
+package com.hamoid
 
 import processing.data.JSONArray
 import processing.data.StringList

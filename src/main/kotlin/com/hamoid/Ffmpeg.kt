@@ -1,17 +1,17 @@
-package videoExport
+package com.hamoid
 
+import com.hamoid.Settings.ffmpegCrfQuality
+import com.hamoid.Settings.ffmpegExecutable
+import com.hamoid.Settings.ffmpegFrameRate
+import com.hamoid.Settings.ffmpegHeight
+import com.hamoid.Settings.ffmpegMetadataComment
+import com.hamoid.Settings.ffmpegWidth
+import com.hamoid.Settings.saveDebugInfo
 import com.sun.jna.platform.win32.Kernel32
 import com.sun.jna.platform.win32.Wincon
 import processing.core.PApplet
 import processing.core.PConstants
 import processing.data.JSONArray
-import videoExport.Settings.ffmpegCrfQuality
-import videoExport.Settings.ffmpegExecutable
-import videoExport.Settings.ffmpegFrameRate
-import videoExport.Settings.ffmpegHeight
-import videoExport.Settings.ffmpegMetadataComment
-import videoExport.Settings.ffmpegWidth
-import videoExport.Settings.saveDebugInfo
 import java.io.*
 import java.util.regex.Pattern
 
@@ -40,7 +40,7 @@ class Ffmpeg(private val parent: PApplet, var outputFilePath: String) {
     val isStarted: Boolean
         get() = ffmpeg != null
 
-    private fun getProcessArguments(cmd: JSONArray) = cmd.stringArray.map {
+    private fun getProcessArguments(cmd: JSONArray) = cmd.toStringArray().map {
         if (it.contains("[")) {
             it.replace("[ffmpeg]", ffmpegExecutable)
                 .replace("[width]", "" + ffmpegWidth)

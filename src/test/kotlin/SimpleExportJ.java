@@ -1,5 +1,5 @@
 import processing.core.PApplet;
-import videoExport.VideoExport;
+import com.hamoid.VideoExport;
 
 public class SimpleExportJ extends PApplet {
     VideoExport videoExport;
@@ -30,7 +30,7 @@ public class SimpleExportJ extends PApplet {
     @Override
     public void keyPressed() {
         if (key == 'q') {
-            videoExport.dispose();
+            videoExport.endMovie();
             exit();
         }
     }

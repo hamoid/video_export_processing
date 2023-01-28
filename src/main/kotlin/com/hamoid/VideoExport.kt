@@ -1,25 +1,25 @@
-package videoExport
+package com.hamoid
 
+import com.hamoid.Settings.ASK_FOR_FFMPEG_DIALOG_TEXT
+import com.hamoid.Settings.ASK_FOR_FFMPEG_INPUT
+import com.hamoid.Settings.CMD_ENCODE_AUDIO_DEFAULT
+import com.hamoid.Settings.CMD_ENCODE_GRAY_DEFAULT
+import com.hamoid.Settings.CMD_ENCODE_RGB_DEFAULT
+import com.hamoid.Settings.FFMPEG_PATH_UNSET
+import com.hamoid.Settings.SETTINGS_CMD_ENCODE_ALPHA
+import com.hamoid.Settings.SETTINGS_CMD_ENCODE_AUDIO
+import com.hamoid.Settings.SETTINGS_CMD_ENCODE_VIDEO
+import com.hamoid.Settings.SETTINGS_FFMPEG_PATH
+import com.hamoid.Settings.ffmpegAudioBitRate
+import com.hamoid.Settings.ffmpegCrfQuality
+import com.hamoid.Settings.ffmpegExecutable
+import com.hamoid.Settings.ffmpegFrameRate
+import com.hamoid.Settings.ffmpegMetadataComment
 import processing.core.PApplet
 import processing.core.PImage
 import processing.data.JSONArray
 import processing.data.JSONObject
 import processing.data.StringList
-import videoExport.Settings.ASK_FOR_FFMPEG_DIALOG_TEXT
-import videoExport.Settings.ASK_FOR_FFMPEG_INPUT
-import videoExport.Settings.CMD_ENCODE_AUDIO_DEFAULT
-import videoExport.Settings.CMD_ENCODE_GRAY_DEFAULT
-import videoExport.Settings.CMD_ENCODE_RGB_DEFAULT
-import videoExport.Settings.FFMPEG_PATH_UNSET
-import videoExport.Settings.SETTINGS_CMD_ENCODE_ALPHA
-import videoExport.Settings.SETTINGS_CMD_ENCODE_AUDIO
-import videoExport.Settings.SETTINGS_CMD_ENCODE_VIDEO
-import videoExport.Settings.SETTINGS_FFMPEG_PATH
-import videoExport.Settings.ffmpegAudioBitRate
-import videoExport.Settings.ffmpegCrfQuality
-import videoExport.Settings.ffmpegExecutable
-import videoExport.Settings.ffmpegFrameRate
-import videoExport.Settings.ffmpegMetadataComment
 import java.io.File
 import java.io.IOException
 import java.net.URISyntaxException
@@ -31,12 +31,9 @@ import kotlin.system.exitProcess
 // https://discourse.processing.org/t/processing-kotlin-syphon-gradle/18927/4
 // https://mvnrepository.com/search?q=org.processing&d=org.processing
 // https://docs.gradle.org/current/samples/sample_building_kotlin_libraries.html#header
-
 // https://imperceptiblethoughts.com/shadow/introduction/
 
-// Current state: builds and works from inside intellij, but not from Processing
-// 3 or 4.
-
+// builds and works from inside intellij, but not from Processing 3 or 4.
 // Solved with this
 // https://discuss.kotlinlang.org/t/kotlin-1-4-21-where-is-kotlin-runtime-jar/20655
 // for Processing 3, but it embeds the PDE, need to adjust deps
@@ -51,7 +48,7 @@ VideoExport v = new VideoExport();
 void setup() {
     println(v.isAvailable());
     v.openDialog();
-}
+}/
 */
 
 /**
@@ -106,7 +103,7 @@ class VideoExport @JvmOverloads constructor(
 
             val settingsFile = File(settingsPath)
             if (settingsFile.isFile) {
-                println(settingsPath)
+                //println(settingsPath)
                 settings = parent.loadJSONObject(settingsPath)
 
                 // Update config files from v0.2.2
@@ -382,7 +379,7 @@ class VideoExport @JvmOverloads constructor(
 
 
     /**
-     * Call this function to figure out how many frames your movie has so far.
+     * Use to figure out how many frames your movie has so far.
      *
      * @return the number of frames added to the movie so far
      */
@@ -487,18 +484,17 @@ class VideoExport @JvmOverloads constructor(
 
     fun startMovie() = initialize()
 
+    fun endMovie() = dispose()
 
     /**
      * Called automatically by Processing to clean up before shut down
      */
     fun dispose() {
         ffmpegRGB.endMovie()
+        ffmpegAlpha.endMovie()
         if (audioFilePath != null && audioFilePath!!.isNotEmpty()) {
             attachSound()
             audioFilePath = null
-        }
-        if (ffmpegAlpha != null) {
-            ffmpegAlpha.endMovie()
         }
     }
 
@@ -537,7 +533,7 @@ class VideoExport @JvmOverloads constructor(
             CMD_ENCODE_AUDIO_DEFAULT
         }
         val tmpAudioFile = "temp-with-audio.mp4"
-        val cmdArgs = cmd.stringArray.map {
+        val cmdArgs = cmd.toStringArray().map {
             if (it.contains("[")) {
                 it.replace("[ffmpeg]", ffmpegExecutable)
                     .replace("[inputvideo]", ffmpegRGB.outputFilePath)
@@ -569,18 +565,15 @@ class VideoExport @JvmOverloads constructor(
             try {
                 // wait until done
                 process.waitFor()
-                val deleted: Boolean = File(ffmpegRGB.outputFilePath).delete()
-                val renamed = parent.sketchFile(tmpAudioFile)
-                    .renameTo(File(ffmpegRGB.outputFilePath))
+                File(ffmpegRGB.outputFilePath).delete()
+                parent.sketchFile(tmpAudioFile).renameTo(File(ffmpegRGB.outputFilePath))
             } catch (e: InterruptedException) {
-                PApplet.println(
-                    "Waiting for ffmpeg while adding audio timed out!"
-                )
+                println("Waiting for ffmpeg while adding audio timed out!")
                 e.printStackTrace()
             }
         }
         if (!Settings.saveDebugInfo && ffmpegOutputLogAudio.isFile) {
-            val deleted = ffmpegOutputLogAudio.delete()
+            ffmpegOutputLogAudio.delete()
         }
     }
 
