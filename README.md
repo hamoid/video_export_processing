@@ -1,7 +1,8 @@
-ℹ Notes:
+Notes:
 
-- I'm looking for someone to **maintain** this library. Get in contact if you are using it and want to take over.
-- There's a newer **rewrite** of the library using Kotlin and Gradle. Download it from https://github.com/hamoid/video_export_processing/tree/kotlinGradle
+### 1. I'm looking for someone to **maintain** this library. Get in contact if you are using it and would like to continue its development. I can help by answering any questions you may have.
+
+### 2. There's a newer **rewrite** of the library using Kotlin and Gradle. Download it from https://github.com/hamoid/video_export_processing/tree/kotlinGradle
 
 # Video Export for Processing
 
